@@ -46,8 +46,6 @@ services:
     restart: unless-stopped
     depends_on:
       - mariadb
-    ports:
-      - "8080:80"
     environment:
       - SERVICE_URL_MEDIAWIKI_80
     configs:
