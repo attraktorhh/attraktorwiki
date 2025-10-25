@@ -34,6 +34,7 @@ services:
     volumes:
       - mediawiki-mysql:/var/lib/mysql
       - /mnt/shared:/mnt/shared:ro
+      - /mnt/backups/attraktorwiki/mariadb:/mnt/backups:rw
   mediawiki:
     extends:
       file: compose.common.yaml
@@ -53,6 +54,7 @@ services:
       - 'mediawiki-images:/var/www/html/images'
       - 'mediawiki-composer-cache:/var/www/html/.composer/cache'
       - /mnt/shared:/mnt/shared:ro
+      - /mnt/backups/attraktorwiki/mediawiki:/mnt/backups:rw
     healthcheck:
       test:
         - CMD
