@@ -4,7 +4,7 @@ configs:
   mediawiki_secrets:
     content: |
       <?php
-      $$wgSecretKey   = "${SERVICE_PASSWORD_64_APPSECRET:?}";
+      $$wgSecretKey   = "${APPSECRET}";
       $$wgServer      = "${SERVICE_URL_MEDIAWIKI:?}";
       $$wgFQDN        = "${SERVICE_FQDN_MEDIAWIKI:?}";
       $$wgDBtype      = "mysql";
@@ -42,7 +42,7 @@ services:
       - source: mediawiki_secrets
         target: /var/www/data/LocalSecrets.php
     environment:
-      - SERVICE_PASSWORD_64_APPSECRET
+      - APPSECRET=${SERVICE_PASSWORD_64_APPSECRET:?}
       - SERVICE_URL_MEDIAWIKI
       - SERVICE_FQDN_MEDIAWIKI
       - SERVICE_NAME_MARIADB
