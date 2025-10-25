@@ -50,17 +50,6 @@ services:
       # - ./composer.local.json:/var/www/html/composer.local.json
       # - ./LocalSettings.php:/var/www/html/LocalSettings.php
 
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: attr_phpmyadmin
-    restart: unless-stopped
-    depends_on:
-      - mariadb
-    environment:
-      PMA_HOST: ${SERVICE_NAME_MARIADB}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-
 volumes:
   mediawiki-images:
   mediawiki-mysql:
