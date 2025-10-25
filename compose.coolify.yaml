@@ -8,10 +8,10 @@ configs:
       $$wgServer      = "${SERVICE_URL_MEDIAWIKI:?}";
       $$wgFQDN        = "${SERVICE_FQDN_MEDIAWIKI:?}";
       $$wgDBtype      = "mysql";
-      $$wgDBserver    = "${SERVICE_NAME_MARIADB:?}";
-      $$wgDBname      = "${DBNAME:?}";
-      $$wgDBuser      = "${DBUSER:?}";
-      $$wgDBpassword  = "${SERVICE_PASSWORD_DBUSERPW:?}";
+      $$wgDBserver    = "${SERVICE_NAME_MARIADB}";
+      $$wgDBname      = "${MYSQL_DATABASE}";
+      $$wgDBuser      = "${MYSQL_USER}";
+      $$wgDBpassword  = "${MYSQL_PASSWORD}";
       $$wgSMTP = [
         'host'      => "${SMTP_HOST:?}",
         'IDHost'    => "${SMTP_IDHOST:?}",
@@ -40,6 +40,12 @@ services:
       service: mediawiki
     environment:
       - MEDIAWIKI_APPSECRET=${SERVICE_PASSWORD_64_APPSECRET:?}
+      - SMTP_HOST=${SMTP_HOST:?}
+      - SMTP_IDHOST=${SMTP_IDHOST:?}
+      - SMTP_PORT=${SMTP_PORT:?587}
+      - SMTP_AUTH=${SMTP_AUTH:?true}
+      - SMTP_USERNAME=${SMTP_USERNAME:?}
+      - SMTP_PASSWORD=${SMTP_PASSWORD:?}
     configs:
       - source: mediawiki_secrets
         target: /var/www/data/LocalSecrets.php
