@@ -47,6 +47,7 @@ services:
     volumes:
       - 'mediawiki-images:/var/www/html/images'
       - 'mediawiki-composer-cache:/var/www/html/.composer/cache'
+      - /mnt/shared:/mnt/shared:ro
       # - ./skins/attraktor:/var/www/html/skins/attraktor
       # - ./composer.local.json:/var/www/html/composer.local.json
       # - ./LocalSettings.php:/var/www/html/LocalSettings.php
