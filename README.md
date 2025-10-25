@@ -85,7 +85,7 @@
 - Post-deployment for Container: `mediawiki`:
 
     ```shell
-    php maintenance/run.php update --quick && php maintenance/run.php runJobs
+    sleep 10s && php maintenance/run.php update --quick && php maintenance/run.php runJobs
     ```
 
 #### Environment Variables
