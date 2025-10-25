@@ -35,6 +35,12 @@ services:
       - mediawiki-mysql:/var/lib/mysql
       - /mnt/shared:/mnt/shared:ro
       - /mnt/backups/attraktorwiki/mariadb:/mnt/backups:rw
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
   mediawiki:
     extends:
       file: compose.common.yaml
