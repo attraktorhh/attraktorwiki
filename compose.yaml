@@ -1,3 +1,5 @@
+name: attraktorwiki
+
 configs:
   mediawiki_secrets:
     content: |
