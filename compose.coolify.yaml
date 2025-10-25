@@ -4,7 +4,7 @@ configs:
   mediawiki_secrets:
     content: |
       <?php
-      $$wgSecretKey   = "${MEDIAWIKI_APPSECRET}";
+      $$wgSecretKey   = "${SERVICE_PASSWORD_64_APPSECRET}";
       $$wgServer      = "${SERVICE_URL_MEDIAWIKI}";
       $$wgFQDN        = "${SERVICE_FQDN_MEDIAWIKI}";
       $$wgDBtype      = "mysql";
