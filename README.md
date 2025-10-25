@@ -1,68 +1,43 @@
-# attraktorwiki
+# Attraktor Wiki
+
+MediaWiki instance for Attraktor e.V.
+<https://wiki.attraktor.org/Attraktor_Wiki>
+<https://www.mediawiki.org/wiki/Version_lifecycle>
+
+## Upgrading to new MediaWiki Version
+
+Please refer to the [UPGRADE.md](./docs/UPGRADE.md) document for detailed upgrade instructions.
 
 ## Local Development with Docker Compose
 
-- Prerequisites
-  - Database dump in `./backup/` compatible with MediaWiki 1.43 (e.g. `attraktorwiki.REL1_43.sql.gz`)
-  - Backup of `images/` in `./backup/` (or directly in `./images/` from previous installation)
-
-1. Copy `.env.dist` to `.env` and adjust environment variables as needed.
-
-   ```shell
-   cp .env.dist .env
-   ```
-
-2. Build and start the containers:
-
-   ```shell
-   docker compose up -d --build
-   ```
-
-3. import database dump from backup file in `./backup/` folder:
-
-   ```shell
-   source '.env' && gunzip < ./backup/attraktorwiki.REL1_43.sql.gz | docker compose exec -T mariadb mariadb -u attraktorwiki -p${SERVICE_PASSWORD_DBUSERPW} attraktorwiki
-   ```
-
-4. Import images from backup files in `./backup/` folder and set proper permissions:
-
-   - If images are in `./backup/images/`:
-
-     ```shell
-     docker compose cp ./backup/images/. mediawiki:/var/www/html/images/
-     ```
-
-   - in any case, set proper ownership:
-
-      ```shell
-      docker compose exec mediawiki chown -R www-data:www-data /var/www/html/images
-      ```
-
-5. Run MediaWiki update script:
-
-   ```shell
-   docker compose exec mediawiki php maintenance/run.php update --quick
-   ```
-
-6. Run pending Jobs:
-
-   ```shell
-   docker compose exec mediawiki php maintenance/run.php runJobs
-   ```
-
-7. Access the wiki at <http://localhost:8080>
+Please refer to the [LOCAL.md](./docs/LOCAL.md) document for detailed instructions on setting up a local development environment.
 
 ## Coolify Deployment
+
+### Create New Application
+
+1. Login to coolify.
+2. Pick or create a Project (e.g. `Wiki`).
+3. choose an environment (e.g. `Production`).
+4. create a new application from `Private Git Repository`.
+5. select github application (is used for deployment).
+6. pick the `attraktorwiki` repository.
+7. fill out the settings as follows:
+    - Branch: `REL1_43` (or any other branch you want to deploy)
+    - Build Pack: `Docker Compose`
+    - Base Directory: `/`
+    - Docker Compose Location: `/compose.coolify.yaml`
 
 ### Configuration
 
 #### General
 
 - General
-  - Name: `attraktorwiki`
+  - Name: `Attraktor Wiki`
+  - Description: `MediaWiki instance for Attraktor e.V.`
   - Build Pack: `Docker Compose`
 - Domains
-  - Domains for mediawiki: `wiki.attraktor.org`
+  - Domains for mediawiki: `https://wiki.attraktor.org`
 - Build
   - Base Directory: `/`
   - Docker Compose Location: `/compose.coolify.yaml`
@@ -70,7 +45,7 @@
 - Post-deployment for Container: `mediawiki`:
 
     ```shell
-    php maintenance/run.php update --quick && php maintenance/run.php runJobs
+    sleep 10s && php maintenance/run.php update --quick && php maintenance/run.php runJobs
     ```
 
 #### Environment Variables
@@ -90,9 +65,15 @@
 
 ### First time Setup (Or Restore from Backup)
 
+- Once everything is configured click `Deploy` in the top right corner to start the first deployment.
+
+> [!NOTE]
+> The first deployment will throw errors because the database is empty. This is expected.
+
 - Copy database backup and images to Coolify server's shared storage, e.g. to `/mnt/shared/` mounted in both mariadb and mediawiki containers.
   - use `scp` or similar tool to transfer files via commandline.
   - or use `zipline` or `filebrowser` container in Coolify to upload files via web interface.
+  - then move/copy files to `/mnt/shared/` folder using host terminal.
 - restore database (run inside mariadb container)
 
    ```shell
@@ -102,7 +83,7 @@
 - restore images (run inside mediawiki container)
 
    ```shell
-   tar -xvzf /mnt/shared/attraktorwiki.images.tar.gz -C /var/www/html/images && \
+   tar -xvzf /mnt/shared/attraktorwiki.images.tar.gz -C /var/www/html/ && \
    chown -R www-data:www-data /var/www/html/images
    ```
 

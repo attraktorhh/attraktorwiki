@@ -1,0 +1,4 @@
+RewriteCond %{REQUEST_URI} !^/w/rest\.php
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-d
+RewriteRule ^(.*)$ %{DOCUMENT_ROOT}/index.php [L]

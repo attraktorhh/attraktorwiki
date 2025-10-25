@@ -2,3 +2,4 @@ backup/*
 .env
 LocalSecrets.php
 images
+configs/LocalSettings_original.php
