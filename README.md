@@ -61,7 +61,6 @@ Please refer to the [LOCAL.md](./docs/LOCAL.md) document for detailed instructio
 
 #### Scheduled Tasks
 
-- ToDo: add backups of database and images here
 - Add Backup Job for Database (e.g. daily at 2am)
   - Name: `Database Backup`
   - Frequency: `daily`
@@ -79,6 +78,8 @@ Please refer to the [LOCAL.md](./docs/LOCAL.md) document for detailed instructio
     ```shell
     tar -czf /mnt/backups/images_$(date +%Y%m%d).tar.gz /var/www/html/images
     ```
+
+- Backups will be synced with S3 Bucket via Duplicati container in Coolify.
 
 ### First time Setup (Or Restore from Backup)
 
