@@ -67,7 +67,7 @@ Please refer to the [LOCAL.md](./docs/LOCAL.md) document for detailed instructio
   - Command:
 
     ```shell
-    mariadb-dump -u ${MYSQL_USER} -p${SERVICE_PASSWORD_DBUSERPW} --default-character-set=binary --single-transaction ${MYSQL_DATABASE} | gzip > /mnt/backups/${MYSQL_DATABASE}_$(date +%Y%m%d).sql.gz
+    backup_db.sh
     ```
 
 - Add Backup Job for Images (e.g. monthly at 2am)
@@ -76,7 +76,7 @@ Please refer to the [LOCAL.md](./docs/LOCAL.md) document for detailed instructio
   - Command:
 
     ```shell
-    tar -czf /mnt/backups/images_$(date +%Y%m%d).tar.gz /var/www/html/images
+    IMAGEPATH=/var/www/html/images BACKUP_RETRIES=5 BACKUP_RETRY_DELAY=1 backup_images.sh
     ```
 
 - Backups will be synced with S3 Bucket via Duplicati container in Coolify.

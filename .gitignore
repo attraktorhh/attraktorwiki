@@ -3,3 +3,4 @@ backup/*
 LocalSecrets.php
 images
 configs/LocalSettings_original.php
+shared

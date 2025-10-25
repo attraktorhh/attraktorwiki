@@ -25,6 +25,8 @@ services:
       - MYSQL_ROOT_PASSWORD=${SERVICE_PASSWORD_DBROOTPW:?}
     volumes:
       - mediawiki-mysql:/var/lib/mysql
+      - ./shared:/mnt/shared:ro
+      - ./backup/attraktorwiki/mariadb:/mnt/backups:rw
   mediawiki:
     extends:
       file: compose.common.yaml
@@ -36,7 +38,9 @@ services:
         target: /var/www/data/LocalSecrets.php
     volumes:
       - mediawiki-composer-cache:/var/www/html/.composer/cache
-      - ./images:/var/www/html/images
+      - ./shared:/mnt/shared:ro
+      - ./backup/attraktorwiki/mediawiki:/mnt/backups:rw
+      - ./images:/var/www/html/images:rw
       - ./skins/attraktor:/var/www/html/skins/attraktor
       - ./configs/composer.local.json:/var/www/html/composer.local.json
       - ./configs/LocalSettings.php:/var/www/html/LocalSettings.php
