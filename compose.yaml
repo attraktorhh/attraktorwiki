@@ -4,82 +4,44 @@ configs:
   mediawiki_secrets:
     content: |
       <?php
-      $$wgSecretKey   = "${MEDIAWIKI_SECRET_KEY}";
-      $$wgServer      = "${COOLIFY_URL}";
-      $$wgFQDN        = "${COOLIFY_FQDN}";
+      $$wgSecretKey   = "${SERVICE_PASSWORD_64_APPSECRET:?}";
+      $$wgServer      = "${SERVICE_URL_MEDIAWIKI:?}";
+      $$wgFQDN        = "${SERVICE_FQDN_MEDIAWIKI:?}";
       $$wgDBtype      = "mysql";
-      $$wgDBserver    = "${SERVICE_NAME_MARIADB}";
-      $$wgDBname      = "${MYSQL_DATABASE}";
-      $$wgDBuser      = "${MYSQL_USER}";
-      $$wgDBpassword  = "${MYSQL_PASSWORD}";
-      // $$wgSMTP = [
-      //     'host'      => "${SMTP_HOST}",
-      //     'IDHost'    => "${SMTP_IDHOST}",
-      //     'port'      => ${SMTP_PORT},
-      //     'auth'      => true,
-      //     'username'  => "${SMTP_USERNAME}",
-      //     'password'  => "${SMTP_PASSWORD}"
-      // ];
-  mediawiki_settings:
-    file: ./configs/LocalSettings.php
-  mediawiki_composer_local:
-    file: ./configs/composer.local.json
-      
+      $$wgDBserver    = "${SERVICE_NAME_MARIADB:?}";
+      $$wgDBname      = "${DBNAME:?attraktorwiki}";
+      $$wgDBuser      = "${DBUSER:?attraktorwiki}";
+      $$wgDBpassword  = "${SERVICE_PASSWORD_DBUSERPW:?}";
+
 services:
   mariadb:
-    image: mariadb:lts
-    container_name: attr_mariadb
-    restart: unless-stopped
+    extends:
+      file: compose.common.yaml
+      service: mariadb
     environment:
-      - MYSQL_DATABASE
-      - MYSQL_USER
-      - MYSQL_PASSWORD
-      - MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE=${DBNAME:?attraktorwiki}
+      - MYSQL_USER=${DBUSER:?attraktorwiki}
+      - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW:?}
+      - MYSQL_ROOT_PASSWORD=${SERVICE_PASSWORD_DBROOTPW:?}
     volumes:
-      - mediawikidb-mysql:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
-      start_period: 10s
-      interval: 10s
-      timeout: 5s
-      retries: 3
-
+      - mediawiki-mysql:/var/lib/mysql
   mediawiki:
-    build: .
-    container_name: attr_mediawiki
-    restart: unless-stopped
-    depends_on:
-      - mariadb
+    extends:
+      file: compose.common.yaml
+      service: mediawiki
     ports:
       - "8080:80"
-    environment:
-      - SERVICE_URL_MEDIAWIKI_80
     configs:
       - source: mediawiki_secrets
         target: /var/www/data/LocalSecrets.php
-      - source: mediawiki_settings
-        target: /var/www/html/LocalSettings.php
-      - source: mediawiki_composer_local
-        target: /var/www/html/composer.local.json
     volumes:
-      - 'mediawiki-images:/var/www/html/images'
-      - 'mediawiki-composer-cache:/var/www/html/.composer/cache'
-      # - ./skins/attraktor:/var/www/html/skins/attraktor
-      # - ./composer.local.json:/var/www/html/composer.local.json
-      # - ./LocalSettings.php:/var/www/html/LocalSettings.php
-    healthcheck:
-      test:
-        - CMD
-        - curl
-        - '-f'
-        - 'http://localhost:80'
-      interval: 5s
-      timeout: 20s
-      retries: 10
+      - mediawiki-composer-cache:/var/www/html/.composer/cache
+      - ./images:/var/www/html/images
+      - ./skins/attraktor:/var/www/html/skins/attraktor
+      - ./configs/composer.local.json:/var/www/html/composer.local.json
 
 volumes:
-  mediawiki-images:
-  mediawikidb-mysql:
+  mediawiki-mysql:
   mediawiki-composer-cache:
 
 networks:

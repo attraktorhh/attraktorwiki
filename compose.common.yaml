@@ -1,0 +1,19 @@
+name: attraktorwiki
+
+services:
+  mariadb:
+    image: mariadb:lts
+    container_name: attr_mariadb
+    restart: unless-stopped
+    volumes:
+      - mediawiki-mysql:/var/lib/mysql
+
+  mediawiki:
+    build: .
+    container_name: attr_mediawiki
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+    volumes:
+      - 'mediawiki-images:/var/www/html/images'
+      - 'mediawiki-composer-cache:/var/www/html/.composer/cache'
