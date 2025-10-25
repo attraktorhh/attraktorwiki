@@ -4,21 +4,21 @@ configs:
   mediawiki_secrets:
     content: |
       <?php
-      $$wgSecretKey   = "${SERVICE_PASSWORD_64_APPSECRET:?}";
-      $$wgServer      = "${SERVICE_URL_MEDIAWIKI:?}";
-      $$wgFQDN        = "${SERVICE_FQDN_MEDIAWIKI:?}";
+      $$wgSecretKey   = "${MEDIAWIKI_APPSECRET}";
+      $$wgServer      = "${SERVICE_URL_MEDIAWIKI}";
+      $$wgFQDN        = "${SERVICE_FQDN_MEDIAWIKI}";
       $$wgDBtype      = "mysql";
       $$wgDBserver    = "${SERVICE_NAME_MARIADB}";
       $$wgDBname      = "${MYSQL_DATABASE}";
       $$wgDBuser      = "${MYSQL_USER}";
       $$wgDBpassword  = "${MYSQL_PASSWORD}";
       $$wgSMTP = [
-        'host'      => "${SMTP_HOST:?}",
-        'IDHost'    => "${SMTP_IDHOST:?}",
-        'port'      => ${SMTP_PORT:?587},
-        'auth'      => ${SMTP_AUTH:?true},
-        'username'  => "${SMTP_USERNAME:?}",
-        'password'  => "${SMTP_PASSWORD:?}"
+        'host'      => "${SMTP_HOST}",
+        'IDHost'    => "${SMTP_IDHOST}",
+        'port'      => ${SMTP_PORT},
+        'auth'      => ${SMTP_AUTH},
+        'username'  => "${SMTP_USERNAME}",
+        'password'  => "${SMTP_PASSWORD}"
       ];
 
 services:
@@ -27,8 +27,8 @@ services:
       file: compose.common.yaml
       service: mariadb
     environment:
-      - MYSQL_DATABASE=${DBNAME:?attraktorwiki}
-      - MYSQL_USER=${DBUSER:?attraktorwiki}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:?attraktorwiki}
+      - MYSQL_USER=${MYSQL_USER:?attraktorwiki}
       - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW:?}
       - MYSQL_ROOT_PASSWORD=${SERVICE_PASSWORD_DBROOTPW:?}
     volumes:
