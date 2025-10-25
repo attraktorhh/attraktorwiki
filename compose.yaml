@@ -51,6 +51,15 @@ services:
       # - ./skins/attraktor:/var/www/html/skins/attraktor
       # - ./composer.local.json:/var/www/html/composer.local.json
       # - ./LocalSettings.php:/var/www/html/LocalSettings.php
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - '-f'
+        - 'http://localhost:80'
+      interval: 5s
+      timeout: 20s
+      retries: 10
 
 volumes:
   mediawiki-images:
