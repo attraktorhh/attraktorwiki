@@ -41,6 +41,11 @@ services:
     configs:
       - source: mediawiki_secrets
         target: /var/www/data/LocalSecrets.php
+    environment:
+      - SERVICE_PASSWORD_64_APPSECRET
+      - SERVICE_URL_MEDIAWIKI
+      - SERVICE_FQDN_MEDIAWIKI
+      - SERVICE_NAME_MARIADB
     volumes:
       - 'mediawiki-images:/var/www/html/images'
       - 'mediawiki-composer-cache:/var/www/html/.composer/cache'
