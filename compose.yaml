@@ -46,8 +46,6 @@ services:
     restart: unless-stopped
     depends_on:
       - mariadb
-    environment:
-      - SERVICE_URL_MEDIAWIKI_80
     configs:
       - source: mediawiki_secrets
         target: /var/www/data/LocalSecrets.php
