@@ -47,13 +47,13 @@
 - Backup the database
 
   ```bash
-  docker compose exec mediawikidb mysqldump -u attraktorwiki -p4fnk455s --default-character-set=binary --single-transaction attraktorwiki | gzip > ./backups/attraktorwiki.REL1_27.sql.gz
+  docker compose exec mediawikidb mariadb-dump -u attraktorwiki -p${SERVICE_PASSWORD_DBUSERPW} --default-character-set=binary --single-transaction attraktorwiki | gzip > ./backups/attraktorwiki.REL1_27.sql.gz
   ```
 
 - setup database
 
   ```bash
-  docker compose exec mediawikidb sh -lc 'mysqladmin -u root -prootsecret drop attraktorwiki'
+  docker compose exec mediawikidb sh -lc 'mysqladmin -u root -p${SERVICE_PASSWORD_DBROOTPW} drop attraktorwiki'
 
   docker compose exec mediawikidb sh -lc 'mysqladmin -u attraktorwiki -p${SERVICE_PASSWORD_DBUSERPW} create attraktorwiki --default-character-set=binary'
   ```

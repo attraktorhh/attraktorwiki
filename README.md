@@ -62,6 +62,23 @@ Please refer to the [LOCAL.md](./docs/LOCAL.md) document for detailed instructio
 #### Scheduled Tasks
 
 - ToDo: add backups of database and images here
+- Add Backup Job for Database (e.g. daily at 2am)
+  - Name: `Database Backup`
+  - Frequency: `daily`
+  - Command:
+
+    ```shell
+    mariadb-dump -u ${MYSQL_USER} -p${SERVICE_PASSWORD_DBUSERPW} --default-character-set=binary --single-transaction ${MYSQL_DATABASE} | gzip > /mnt/backups/${MYSQL_DATABASE}_$(date +%Y%m%d).sql.gz
+    ```
+
+- Add Backup Job for Images (e.g. monthly at 2am)
+  - Name: `Images Backup`
+  - Frequency: `monthly`
+  - Command:
+
+    ```shell
+    tar -czf /mnt/backups/images_$(date +%Y%m%d).tar.gz /var/www/html/images
+    ```
 
 ### First time Setup (Or Restore from Backup)
 
