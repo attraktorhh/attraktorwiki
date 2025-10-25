@@ -1,68 +1,43 @@
-name: attraktorwiki
-
 configs:
   mediawiki_secrets:
     content: |
       <?php
-      $$wgSecretKey   = "${MEDIAWIKI_SECRET_KEY}";
-      $$wgServer      = "${COOLIFY_URL}";
-      $$wgFQDN        = "${COOLIFY_FQDN}";
+      $$wgSecretKey   = "${SERVICE_PASSWORD_64_APPSECRET:?}";
+      $$wgServer      = "${SERVICE_URL_MEDIAWIKI:?}";
+      $$wgFQDN        = "${SERVICE_FQDN_MEDIAWIKI:?}";
       $$wgDBtype      = "mysql";
-      $$wgDBserver    = "${SERVICE_NAME_MARIADB}";
-      $$wgDBname      = "${MYSQL_DATABASE}";
-      $$wgDBuser      = "${MYSQL_USER}";
-      $$wgDBpassword  = "${MYSQL_PASSWORD}";
-      // $$wgSMTP = [
-      //     'host'      => "${SMTP_HOST}",
-      //     'IDHost'    => "${SMTP_IDHOST}",
-      //     'port'      => ${SMTP_PORT},
-      //     'auth'      => true,
-      //     'username'  => "${SMTP_USERNAME}",
-      //     'password'  => "${SMTP_PASSWORD}"
-      // ];
-      
+      $$wgDBserver    = "${SERVICE_NAME_MARIADB:?}";
+      $$wgDBname      = "${DBNAME:?attraktorwiki}";
+      $$wgDBuser      = "${DBUSER:?attraktorwiki}";
+      $$wgDBpassword  = "${SERVICE_PASSWORD_DBUSERPW:?}";
+
 services:
   mariadb:
-    image: mariadb:lts
-    container_name: attr_mariadb
-    restart: unless-stopped
+    extends:
+      file: compose.common.yaml
+      service: mariadb
     environment:
-      - MYSQL_DATABASE
-      - MYSQL_USER
-      - MYSQL_PASSWORD
-      - MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE=${DBNAME:?attraktorwiki}
+      - MYSQL_USER=${DBUSER:?attraktorwiki}
+      - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW:?}
+      - MYSQL_ROOT_PASSWORD=${SERVICE_PASSWORD_DBROOTPW:?}
     volumes:
       - mediawiki-mysql:/var/lib/mysql
-      - /mnt/shared:/mnt/shared:ro
-
   mediawiki:
-    build: .
-    container_name: attr_mediawiki
-    restart: unless-stopped
-    depends_on:
-      - mariadb
+    extends:
+      file: compose.common.yaml
+      service: mediawiki
+    ports:
+      - "8080:80"
     configs:
       - source: mediawiki_secrets
         target: /var/www/data/LocalSecrets.php
     volumes:
-      - 'mediawiki-images:/var/www/html/images'
-      - 'mediawiki-composer-cache:/var/www/html/.composer/cache'
-      - /mnt/shared:/mnt/shared:ro
-      # - ./skins/attraktor:/var/www/html/skins/attraktor
-      # - ./composer.local.json:/var/www/html/composer.local.json
-      # - ./LocalSettings.php:/var/www/html/LocalSettings.php
-    healthcheck:
-      test:
-        - CMD
-        - curl
-        - '-f'
-        - 'http://localhost:80'
-      interval: 5s
-      timeout: 20s
-      retries: 10
+      - mediawiki-composer-cache:/var/www/html/.composer/cache
+      - ./images:/var/www/html/images
+      - ./skins/attraktor:/var/www/html/skins/attraktor
 
 volumes:
-  mediawiki-images:
   mediawiki-mysql:
   mediawiki-composer-cache:
 

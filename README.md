@@ -5,7 +5,7 @@
 ### Prerequisites
 
 - Database dump in `./backup/` compatible with MediaWiki 1.43 (e.g. `attraktorwiki.REL1_43.sql.gz`)
-- Backup of `images/` in `./backup/`
+- Backup of `images/` in `./backup/` (or directly in `./images/` from previous installation)
 
 ### Run Locally with Docker Compose
 
@@ -24,16 +24,22 @@
 3. import database dump from backup file in `./backup/` folder:
 
    ```shell
-   source '.env' && gunzip < ./backup/attraktorwiki.REL1_43.sql.gz | docker compose exec -T mariadb mariadb -u ${MYSQL_USER} -p${MYSQL_PASSWORD} ${MYSQL_DATABASE}
+   source '.env' && gunzip < ./backup/attraktorwiki.REL1_43.sql.gz | docker compose exec -T mariadb mariadb -u attraktorwiki -p${SERVICE_PASSWORD_DBUSERPW} attraktorwiki
    ```
 
 4. Import images from backup files in `./backup/` folder and set proper permissions:
 
-   ```shell
-   docker compose cp ./backup/images/. mediawiki:/var/www/html/images/
+   - If images are in `./backup/images/`:
 
-   docker compose exec mediawiki chown -R www-data:www-data /var/www/html/images
-   ```
+     ```shell
+     docker compose cp ./backup/images/. mediawiki:/var/www/html/images/
+     ```
+
+   - in any case, set proper ownership:
+
+      ```shell
+      docker compose exec mediawiki chown -R www-data:www-data /var/www/html/images
+      ```
 
 5. Run MediaWiki update script:
 

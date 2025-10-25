@@ -1,0 +1,53 @@
+services:
+  mariadb:
+    extends:
+      file: compose.common.yaml
+      service: mariadb
+    environment:
+      - MYSQL_DATABASE=${DBNAME:?attraktorwiki}
+      - MYSQL_USER=${DBUSER:?attraktorwiki}
+      - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW:?}
+      - MYSQL_ROOT_PASSWORD=${SERVICE_PASSWORD_DBROOTPW:?}
+    volumes:
+      - mediawiki-mysql:/var/lib/mysql
+      - /mnt/shared:/mnt/shared:ro
+  mediawiki:
+    extends:
+      file: compose.common.yaml
+      service: mediawiki
+    ports:
+      - "8080:80"
+    volumes:
+      - 'mediawiki-images:/var/www/html/images'
+      - 'mediawiki-composer-cache:/var/www/html/.composer/cache'
+      - /mnt/shared:/mnt/shared:ro
+      - type: bind
+        target: /var/www/data/LocalSecrets.php
+        content: |
+          <?php
+          $$wgSecretKey   = "${SERVICE_PASSWORD_64_APPSECRET:?}";
+          $$wgServer      = "${SERVICE_URL_MEDIAWIKI:?}";
+          $$wgFQDN        = "${SERVICE_FQDN_MEDIAWIKI:?}";
+          $$wgDBtype      = "mysql";
+          $$wgDBserver    = "${SERVICE_NAME_MARIADB:?}";
+          $$wgDBname      = "${DBNAME:?attraktorwiki}";
+          $$wgDBuser      = "${DBUSER:?attraktorwiki}";
+          $$wgDBpassword  = "${SERVICE_PASSWORD_DBUSERPW:?}";
+          $$wgSMTP = [
+              'host'      => "${SMTP_HOST:?}",
+              'IDHost'    => "${SMTP_IDHOST:?}",
+              'port'      => ${SMTP_PORT:?587},
+              'auth'      => true,
+              'username'  => "${SMTP_USERNAME:?}",
+              'password'  => "${SMTP_PASSWORD:?}"
+          ];
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - '-f'
+        - 'http://localhost:80'
+      interval: 5s
+      timeout: 20s
+      retries: 10
+
