@@ -20,6 +20,9 @@ RUN chown root:www-data /var/www/html/composer.local.json && chmod 640 /var/www/
 COPY ./configs/LocalSettings.php /var/www/html/LocalSettings.php
 RUN chown root:www-data /var/www/html/LocalSettings.php && chmod 640 /var/www/html/LocalSettings.php
 
+COPY ./configs/.htaccess /var/www/html/.htaccess
+RUN chown root:www-data /var/www/html/.htaccess && chmod 640 /var/www/html/.htaccess
+
 COPY ./skins /var/www/html/skins
 RUN chown -R www-data:www-data /var/www/html/skins/*
 

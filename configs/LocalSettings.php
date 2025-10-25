@@ -47,11 +47,12 @@ $wgEnableEmail = true;
 $wgEnableUserEmail = true; # UPO
 
 $wgEmergencyContact = "it@attraktor.org";
-$wgPasswordSender = "it@attraktor.org";
+$wgPasswordSender = "no-reply@attraktor.org";
 
-$wgEnotifUserTalk = false; # UPO
-$wgEnotifWatchlist = false; # UPO
+$wgEnotifUserTalk = true; # UPO
+$wgEnotifWatchlist = true; # UPO
 $wgEmailAuthentication = true;
+$wgEmailConfirmToEdit = true;
 
 # MySQL specific settings
 $wgDBprefix = "";
@@ -70,7 +71,7 @@ $wgMemCachedServers = [];
 
 ## To enable image uploads, make sure the 'images' directory
 ## is writable, then set this to true:
-$wgEnableUploads = false;
+$wgEnableUploads = true;
 $wgUseImageMagick = true;
 $wgImageMagickConvertCommand = "/usr/bin/convert";
 
@@ -172,3 +173,25 @@ wfLoadExtension( 'SemanticResultFormats' );
 enableSemantics( $wgFQDN );
 
 $wgShowExceptionDetails = true;
+
+$wgGroupPermissions['emailconfirmed']['skipcaptcha'] = true;
+$wgGroupPermissions['bot']['delete'] = true;
+$wgGroupPermissions['bot']['bigdelete'] = true;
+$wgGroupPermissions['bureaucrat']['editwidgets'] = true;
+$wgGroupPermissions['sysop']['editwidgets'] = true;
+
+$wgLocalInterwikis = [strtolower( $wgSitename )];
+
+// # Old workaround to rewrite https://wiki.attraktor.org/index.php/Attraktor_Wiki to https://wiki.attraktor.org/Attraktor_Wiki
+// if (!preg_match('/api\.php$/', $_SERVER['SCRIPT_NAME'])) {
+// 	$wgArticlePath = "$wgScriptPath/$1";
+// }
+
+# Official solution https://www.mediawiki.org/wiki/Manual:Short_URL/Docker
+$wgArticlePath = "/$1"; // gives e.g. example.org/wiki/Page_title
+
+$actions = array( 'view', 'edit', 'watch', 'unwatch', 'delete','revert', 'rollback', 'protect', 'unprotect', 'markpatrolled', 'render', 'submit', 'history', 'purge', 'info' );
+
+foreach ( $actions as $action ) {
+    $wgActionPaths[$action] = "/$action/$1";
+}
