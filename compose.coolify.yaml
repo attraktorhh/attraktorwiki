@@ -11,7 +11,7 @@ configs:
       $$wgDBserver    = "${SERVICE_NAME_MARIADB}";
       $$wgDBname      = "${MYSQL_DATABASE}";
       $$wgDBuser      = "${MYSQL_USER}";
-      $$wgDBpassword  = "${MYSQL_PASSWORD}";
+      $$wgDBpassword  = "${SERVICE_PASSWORD_DBUSERPW}";
       $$wgSMTP = [
         'host'      => "${SMTP_HOST}",
         'IDHost'    => "${SMTP_IDHOST}",
