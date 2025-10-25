@@ -20,10 +20,6 @@ configs:
       //     'username'  => "${SMTP_USERNAME}",
       //     'password'  => "${SMTP_PASSWORD}"
       // ];
-  mediawiki_settings:
-    file: ./configs/LocalSettings.php
-  mediawiki_composer_local:
-    file: ./configs/composer.local.json
       
 services:
   mariadb:
@@ -57,10 +53,6 @@ services:
     configs:
       - source: mediawiki_secrets
         target: /var/www/data/LocalSecrets.php
-      - source: mediawiki_settings
-        target: /var/www/html/LocalSettings.php
-      - source: mediawiki_composer_local
-        target: /var/www/html/composer.local.json
     volumes:
       - 'mediawiki-images:/var/www/html/images'
       - 'mediawiki-composer-cache:/var/www/html/.composer/cache'
