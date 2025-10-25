@@ -33,6 +33,7 @@ services:
       - MYSQL_ROOT_PASSWORD
     volumes:
       - mediawiki-mysql:/var/lib/mysql
+      - /mnt/shared:/mnt/shared:ro
 
   mediawiki:
     build: .
