@@ -36,6 +36,7 @@ services:
       - /mnt/shared:/mnt/shared:ro
       - /mnt/backups/attraktorwiki/mariadb:/mnt/backups:rw
       - type: bind
+        is_directory: false
         source: ./scripts/backup_images.sh
         target: /usr/local/bin/backup_images.sh
     healthcheck:
@@ -65,6 +66,7 @@ services:
       - /mnt/shared:/mnt/shared:ro
       - /mnt/backups/attraktorwiki/mediawiki:/mnt/backups:rw
       - type: bind
+        is_directory: false
         source: ./scripts/backup_db.sh
         target: /usr/local/bin/backup_db.sh
     healthcheck:
