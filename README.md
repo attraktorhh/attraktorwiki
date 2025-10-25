@@ -54,6 +54,20 @@
 
 ## Coolify Deployment
 
+### Create New Application
+
+1. Login to coolify.
+2. Pick or create a Project (e.g. `Wiki`).
+3. choose an environment (e.g. `Production`).
+4. create a new application from `Private Git Repository`.
+5. select github application (is used for deployment).
+6. pick the `attraktorwiki` repository.
+7. fill out the settings as follows:
+    - Branch: `REL1_43` (or any other branch you want to deploy)
+    - Build Pack: `Docker Compose`
+    - Base Directory: `/`
+    - Docker Compose Location: `/compose.coolify.yaml`
+
 ### Configuration
 
 #### General
