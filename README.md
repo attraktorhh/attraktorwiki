@@ -57,7 +57,7 @@
 
 ### Deploy to Coolify
 
-#### Coolify
+#### Configuration
 
 - Configuration
   - General
@@ -85,7 +85,7 @@
 - Scheduled Tasks
   - ToDo: add backups of database and images here
 
-#### Manual steps for first time setup
+#### First time Setup (Or Restore from Backup)
 
 - Copy database backup and images to Coolify server's shared storage, e.g. to `/mnt/shared/` mounted in both mariadb and mediawiki containers.
   - use `scp` or similar tool to transfer files via commandline.
@@ -112,4 +112,25 @@
 
 ## Add Extensions
 
-- ToDo
+- Extensions hosted on packagist can be added via composer. Multiple options:
+  - Run inside mediawiki container (will be lost on container rebuild):
+
+    ```shell
+    COMPOSER=composer.local.json composer require mediawiki/<extension-name> --no-update
+    ```
+
+  - Add them to `./configs/composer.local.json` file locally and rebuild container:
+    - Either by just adding them manually to the `require` section of the json file
+    - Or by running the following command locally to add them to the local file (with proper version and dependencies):
+
+      ```shell
+      docker compose exec mediawiki bash -lc 'COMPOSER=composer.local.json composer require mediawiki/<extension-name> --no-update'
+      ```
+
+  - In both cases, after modifying `composer.local.json`, rebuild the mediawiki container to apply changes:
+
+    ```shell
+    docker compose up -d --build mediawiki
+    ```
+
+- Extensions not hosted on packagist have to be added to the DOCKERFILE as git clone commands.

@@ -38,6 +38,7 @@ services:
       - mediawiki-composer-cache:/var/www/html/.composer/cache
       - ./images:/var/www/html/images
       - ./skins/attraktor:/var/www/html/skins/attraktor
+      - ./configs/composer.local.json:/var/www/html/composer.local.json
 
 volumes:
   mediawiki-mysql:
