@@ -15,14 +15,14 @@ services:
     extends:
       file: compose.common.yaml
       service: mediawiki
-    ports:
-      - "8080:80"
     volumes:
       - 'mediawiki-images:/var/www/html/images'
       - 'mediawiki-composer-cache:/var/www/html/.composer/cache'
       - /mnt/shared:/mnt/shared:ro
       - type: bind
+        source: ./data/LocalSecrets.php
         target: /var/www/data/LocalSecrets.php
+        isDirectory: false
         content: |
           <?php
           $$wgSecretKey   = "${SERVICE_PASSWORD_64_APPSECRET:?}";
