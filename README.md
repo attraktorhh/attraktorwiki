@@ -73,10 +73,11 @@
 #### General
 
 - General
-  - Name: `attraktorwiki`
+  - Name: `Attraktor Wiki`
+  - Description: `MediaWiki instance for Attraktor e.V.`
   - Build Pack: `Docker Compose`
 - Domains
-  - Domains for mediawiki: `wiki.attraktor.org`
+  - Domains for mediawiki: `https://wiki.attraktor.org`
 - Build
   - Base Directory: `/`
   - Docker Compose Location: `/compose.coolify.yaml`
@@ -104,9 +105,15 @@
 
 ### First time Setup (Or Restore from Backup)
 
+- Once everything is configured click `Deploy` in the top right corner to start the first deployment.
+
+> [!NOTE]
+> The first deployment will throw errors because the database is empty. This is expected.
+
 - Copy database backup and images to Coolify server's shared storage, e.g. to `/mnt/shared/` mounted in both mariadb and mediawiki containers.
   - use `scp` or similar tool to transfer files via commandline.
   - or use `zipline` or `filebrowser` container in Coolify to upload files via web interface.
+  - then move/copy files to `/mnt/shared/` folder using host terminal.
 - restore database (run inside mariadb container)
 
    ```shell
@@ -116,7 +123,7 @@
 - restore images (run inside mediawiki container)
 
    ```shell
-   tar -xvzf /mnt/shared/attraktorwiki.images.tar.gz -C /var/www/html/images && \
+   tar -xvzf /mnt/shared/attraktorwiki.images.tar.gz -C /var/www/html/ && \
    chown -R www-data:www-data /var/www/html/images
    ```
 
