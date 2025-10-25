@@ -25,7 +25,7 @@ services:
         isDirectory: false
         content: |
           <?php
-          $$wgSecretKey   = "${SERVICE_PASSWORD_64_APPSECRET:?}";
+          $wgSecretKey   = "$SERVICE_PASSWORD_64_APPSECRET";
           $$wgServer      = "${SERVICE_URL_MEDIAWIKI:?}";
           $$wgFQDN        = "${SERVICE_FQDN_MEDIAWIKI:?}";
           $$wgDBtype      = "mysql";
