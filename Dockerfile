@@ -5,12 +5,16 @@ ARG MEDIAWIKI_RELEASE_BRANCH="REL1_43"
 
 FROM mediawiki:${MEDIAWIKI_IMAGE_VERSION}
 
+## Install additional packages, might be inefficient but makes debugging easier
 RUN apt update && \
-   apt install -y wget unzip iputils-ping nano
+   apt install -y wget unzip iputils-ping nano mariadb-client
 
 COPY --from=composer/composer:2.8-bin /composer /usr/bin/composer
 
 ARG MEDIAWIKI_RELEASE_BRANCH
+
+COPY ./scripts/* /usr/local/bin/
+RUN chmod -R +x /usr/local/bin/
 
 ENV COMPOSER_HOME=/var/www/html/.composer
 

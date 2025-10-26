@@ -8,6 +8,7 @@ OUTFILE="/mnt/backups/${MYSQL_DATABASE}.sql.gz"
 
 if mariadb-dump \
     -u "${MYSQL_USER}" \
+    -h "${MYSQL_HOST}" \
     -p"${MYSQL_PASSWORD}" \
     "${MYSQL_DATABASE}" \
     --default-character-set=binary \
