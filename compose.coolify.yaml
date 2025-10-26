@@ -1,6 +1,9 @@
 name: attraktorwiki
 include:
   - compose.configs.yaml
+configs:
+  mediawiki_secrets:
+    external: true
 services:
   mariadb:
     extends:
