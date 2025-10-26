@@ -1,9 +1,6 @@
 name: attraktorwiki
 include:
   - compose.configs.yaml
-configs:
-  mediawiki_secrets:
-    external: true
 services:
   mariadb:
     image: mariadb:11.8
@@ -16,7 +13,6 @@ services:
       - MYSQL_ROOT_PASSWORD=${SERVICE_PASSWORD_DBROOTPW:?}
     volumes:
       - mediawiki-mysql:/var/lib/mysql
-
   mediawiki:
     build: .
     container_name: attr_mediawiki
