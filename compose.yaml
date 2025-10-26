@@ -36,7 +36,6 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - mediawiki-composer-cache:/var/www/html/.composer/cache
       - ./backups/attraktorwiki:/mnt/backups
       - ./images:/var/www/html/images
       - ./skins/attraktor:/var/www/html/skins/attraktor
@@ -45,7 +44,6 @@ services:
 
 volumes:
   mediawiki-mysql:
-  mediawiki-composer-cache:
 
 networks:
   default:
