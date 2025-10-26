@@ -54,12 +54,12 @@ ini_set( 'display_errors', 1 );
 $wgShowExceptionDetails = true;
 
 $wgSMTP = [
-    'host'      => 'SMTP_HOST',
-    'IDHost'    => 'SMTP_IDHOST',
+    'host'      => 'REDACTED_FOR_SECURITY',
+    'IDHost'    => 'attraktor.org',
     'port'      => 587,
     'auth'      => true,
-    'username'  => 'SMTP_USERNAME',
-    'password'  => 'SMTP_PASSWORD'
+    'username'  => 'no-reply@attraktor.org',
+    'password'  => 'REDACTED_FOR_SECURITY',
 ];
 
 /*
@@ -67,6 +67,15 @@ error_reporting( -1 );
 ini_set( 'display_errors', 1 );
 $wgShowExceptionDetails = true;
 
+$wgSMTP = [
+    'host'      => 'tls://mail.attraktor.org', // If using SSL or TLS, add the prefix "ssl://" or "tls://".
+    'IDHost'    => 'wiki.attraktor.org',      // Generally this will be the domain name of your website (aka mywiki.org)
+    'localhost' => 'wiki.attraktor.org',      // Same as IDHost above; required by some mail servers
+    'port'      => 465,
+    'auth'      => true,
+    'username'  => 'wiki@attraktor.org',
+    'password'  => 'REDACTED_FOR_SECURITY'
+];
 */
 
 
@@ -78,10 +87,10 @@ $wgEmailConfirmToEdit = true;
 
 ## Database settings
 $wgDBtype           = "mysql";
-$wgDBserver         = "localhost";
+$wgDBserver         = "REDACTED_FOR_SECURITY";
 $wgDBname           = "attraktorwiki";
 $wgDBuser           = "attraktorwiki";
-$wgDBpassword       = "attraktorsecret";
+$wgDBpassword       = "REDACTED_FOR_SECURITY";
 
 # MySQL specific settings
 $wgDBprefix         = "";
@@ -158,7 +167,7 @@ $wgHooks["AuthPluginSetup"][] = "germanLanguageHack";
 /* END DIRTY LANGUAGE HACK */
 $srfgFirstDayOfWeek = 'Montag';
 
-$wgSecretKey = "MEDIAWIKI_SECRET_KEY";
+$wgSecretKey = "REDACTED_FOR_SECURITY";
 
 ## Default skin: you can change the default skin. Use the internal symbolic
 ## names, ie 'standard', 'nostalgia', 'cologneblue', 'monobook':
@@ -439,3 +448,4 @@ $wgMaxShellFileSize = 0;
 #$wgPiwikURL = "blog.attraktor.org/piwik/";
 #$wgPiwikIDSite = "2";
 
+$wgReadOnly = 'Dieses Wiki ist im Wartungsmodus, Anpassungen sind zur zeit nicht möglich.';
