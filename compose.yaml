@@ -27,7 +27,6 @@ services:
       - mediawiki-mysql:/var/lib/mysql
       - ./shared:/mnt/shared:ro
       - ./backup/attraktorwiki/mariadb:/mnt/backups:rw
-      - ./scripts/backup_db.sh:/usr/local/bin/backup_db.sh
   mediawiki:
     extends:
       file: compose.common.yaml
@@ -43,7 +42,6 @@ services:
       - ./backup/attraktorwiki/mediawiki:/mnt/backups:rw
       - ./images:/var/www/html/images:rw
       - ./skins/attraktor:/var/www/html/skins/attraktor
-      - ./scripts/backup_images.sh:/usr/local/bin/backup_images.sh
       - ./configs/composer.local.json:/var/www/html/composer.local.json
       - ./configs/LocalSettings.php:/var/www/html/LocalSettings.php
 
