@@ -36,10 +36,13 @@ $wgResourceBasePath = $wgScriptPath;
 ## The URL paths to the logo.  Make sure you change this from the default,
 ## or else you'll overwrite your logo when you upgrade!
 $wgLogos = [
-	'1x' => "$wgResourceBasePath/images/9/95/Attraktor_logo_klein.png",
-	'icon' => "$wgResourceBasePath/images/9/95/Attraktor_logo_klein.png",
+	'icon' => "$wgResourceBasePath/images/logos/Attraktorlogoklein.svg",
+	'1x' => "$wgResourceBasePath/images/logos/Attraktorlogoklein_135.png",
+	'1.5x' => "$wgResourceBasePath/images/logos/Attraktorlogoklein_202.png",
+	'2x' => "$wgResourceBasePath/images/logos/Attraktorlogoklein_270.png",
+	'svg' => "$wgResourceBasePath/images/logos/Attraktorlogoklein.svg",
 ];
-$wgFavicon = "$wgResourceBasePath/images/favicon.png";
+$wgFavicon = "$wgResourceBasePath/images/logos/Attraktorlogo_100x100.png";
 
 ## UPO means: this is also a user preference option
 
@@ -108,9 +111,18 @@ $wgAuthenticationTokenVersion = "1";
 ## appropriate copyright notice / icon. GNU Free Documentation
 ## License and Creative Commons licenses are supported so far.
 $wgRightsPage = ""; # Set to the title of a wiki page that describes your license/copyright
-$wgRightsUrl = "";
-$wgRightsText = "";
-$wgRightsIcon = "";
+$wgRightsUrl = "http://creativecommons.org/licenses/by-nc-sa/3.0/";
+$wgRightsText = "Attribution-NonCommercial-ShareAlike 3.0";
+$wgRightsIcon = "http://creativecommons.org/images/public/somerights.png";
+// $wgFooterIcons['copyright']['copyright'] = "http://creativecommons.org/images/public/somerights.png";
+$wgFooterIcons = [
+	"copyright" => [
+		"copyright" => [
+			"src" => "http://creativecommons.org/images/public/somerights.png",
+			"alt" => "creativecommons somerights",
+		], // placeholder for the built in copyright icon
+	]
+];
 
 # Path to the GNU diff3 utility. Used for conflict resolution.
 $wgDiff3 = "/usr/bin/diff3";
@@ -119,34 +131,44 @@ $wgDiff3 = "/usr/bin/diff3";
 $wgGroupPermissions["*"]["createaccount"] = false;
 $wgGroupPermissions["*"]["edit"] = false;
 
-## Default skin: you can change the default skin. Use the internal symbolic
-## names, e.g. 'vector' or 'monobook':
-$wgDefaultSkin = "vector";
-// $wgDefaultSkin = 'attraktor';
-
 # Enabled skins.
 // require_once "$IP/skins/attraktor/Attraktor.php";
 # The following skins were automatically enabled:
 wfLoadSkin( 'MonoBook' );
 wfLoadSkin( 'Vector' );
 
-# Enabled extensions. Most of the extensions are enabled by adding
-# wfLoadExtension( 'ExtensionName' );
-# to LocalSettings.php. Check specific extension documentation for more details.
-# The following extensions were automatically enabled:
+## Default skin: you can change the default skin. Use the internal symbolic
+## names, e.g. 'vector' or 'monobook':
+$wgDefaultSkin = "vector";
+// $wgDefaultSkin = 'attraktor';
 
 
 # End of automatically generated settings.
 # Add more configuration options below.
 
+## Permission settings
+
+$wgGroupPermissions['user']['upload'] = true;
+$wgGroupPermissions['bot']['delete'] = true;
+$wgGroupPermissions['bot']['bigdelete'] = true;
+
+# Enabled extensions. Most of the extensions are enabled by adding
+# wfLoadExtension( 'ExtensionName' );
+# to LocalSettings.php. Check specific extension documentation for more details.
+# The following extensions were automatically enabled:
+
 # preinstalled extensions
 wfLoadExtension( 'Cite' );
 wfLoadExtension( 'ConfirmEdit' );
+$wgGroupPermissions['emailconfirmed']['skipcaptcha'] = true;
+$ceAllowConfirmedEmail = true;
 wfLoadExtension( 'Gadgets' );
 wfLoadExtension( 'ImageMap' );
 wfLoadExtension( 'InputBox' );
 wfLoadExtension( 'Interwiki' );
 wfLoadExtension( 'Lockdown' );
+$wgSpecialPageLockdown['Export'] = [ 'sysop' ];
+$wgActionLockdown['history'] = [ 'user' ];
 wfLoadExtension( 'Nuke' );
 wfLoadExtension( 'ParserFunctions' );
 wfLoadExtension( 'PdfHandler' );
@@ -158,40 +180,59 @@ wfLoadExtension( 'WikiEditor' );
 
 # extensions installed via Dockerfile
 wfLoadExtension( 'CheckUser' );
+$wgPutIPinRC = true; // Log IP addresses in the recentchanges table
+$wgShowIPinHeader = false;
+$wgCUDMaxAge = 2 * 365 * 24 * 3600;
+$wgAddGroups['sysop'][] = 'checkuser';
+$wgRemoveGroups['sysop'][] = 'checkuser';
 wfLoadExtension( 'intersection' );
 wfLoadExtension( 'Lockdown' );
 wfLoadExtension( 'MsUpload' );
+$wgMSU_showAutoCat = false; // Files uploaded while editing a category page will be added to that category
+$wgMSU_checkAutoCat = false; // Whether the checkbox for adding a category to a page is checked by default
+$wgFileExtensions = [ 'png', 'gif', 'jpg', 'jpeg', 'doc' ,'xls', 'pdf', 'ppt', 'tiff', 'bmp', 'docx', 'xlsx', 'pptx', 'py' ];
+$wgStrictFileExtensions = false; // If this is turned off, users may override the warning for files not
 wfLoadExtension( 'NewUserNotif' );
+$wgNewUserNotifTargets = array();
+$wgNewUserNotifEmailTargets = array( "office@attraktor.org" );
 wfLoadExtension( 'PageForms' );
 wfLoadExtension( 'Renameuser' );
 wfLoadExtension( 'Variables' );
 wfLoadExtension( 'Widgets' );
-
-# Semantic MediaWiki
-wfLoadExtension( 'SemanticMediaWiki' );
-wfLoadExtension( 'SemanticResultFormats' );
-enableSemantics( $wgFQDN );
-
-$wgShowExceptionDetails = true;
-
-$wgGroupPermissions['emailconfirmed']['skipcaptcha'] = true;
-$wgGroupPermissions['bot']['delete'] = true;
-$wgGroupPermissions['bot']['bigdelete'] = true;
 $wgGroupPermissions['bureaucrat']['editwidgets'] = true;
 $wgGroupPermissions['sysop']['editwidgets'] = true;
+wfLoadExtension( 'PluggableAuth' );
+$wgPluggableAuth_EnableLocalLogin = true;
+wfLoadExtension( 'OpenIDConnect' );
 
-$wgLocalInterwikis = [strtolower( $wgSitename )];
+# extensions installed via composer
+wfLoadExtension( 'SemanticMediaWiki' );
+$wgAmericanDates = false;
+$sfg24HourTime = true;
+enableSemantics( $wgFQDN );
+wfLoadExtension( 'SemanticResultFormats' );
+$srfgFormats[] = 'eventline';
+$srfgFormats[] = 'timeline'; 
 
 // # Old workaround to rewrite https://wiki.attraktor.org/index.php/Attraktor_Wiki to https://wiki.attraktor.org/Attraktor_Wiki
 // if (!preg_match('/api\.php$/', $_SERVER['SCRIPT_NAME'])) {
 // 	$wgArticlePath = "$wgScriptPath/$1";
 // }
 
+$wgLocalInterwikis = [strtolower( $wgSitename )]; // ??? 
+
 # Official solution https://www.mediawiki.org/wiki/Manual:Short_URL/Docker
 $wgArticlePath = "/$1"; // gives e.g. example.org/wiki/Page_title
-
 $actions = array( 'view', 'edit', 'watch', 'unwatch', 'delete','revert', 'rollback', 'protect', 'unprotect', 'markpatrolled', 'render', 'submit', 'history', 'purge', 'info' );
-
 foreach ( $actions as $action ) {
     $wgActionPaths[$action] = "/$action/$1";
+}
+
+# Debug
+if ( isset( $phpDebug ) && $phpDebug == true ) {
+	echo "PHP Debug is enabled";
+	$wgShowExceptionDetails = true;
+	$wgDevelopmentWarnings = true;
+	error_reporting( E_ALL );
+	ini_set( 'display_errors', 1 );
 }

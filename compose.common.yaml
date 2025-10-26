@@ -10,8 +10,6 @@ services:
       - MYSQL_USER=${MYSQL_USER:?attraktorwiki}
       - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW:?}
       - MYSQL_ROOT_PASSWORD=${SERVICE_PASSWORD_DBROOTPW:?}
-    volumes:
-      - mediawiki-mysql:/var/lib/mysql
   mediawiki:
     build: .
     container_name: attr_mediawiki
@@ -33,6 +31,4 @@ services:
       - SMTP_AUTH=${SMTP_AUTH:?true}
       - SMTP_USERNAME=${SMTP_USERNAME:?}
       - SMTP_PASSWORD=${SMTP_PASSWORD:?}
-    volumes:
-      - 'mediawiki-images:/var/www/html/images'
-      - 'mediawiki-composer-cache:/var/www/html/.composer/cache'
+      

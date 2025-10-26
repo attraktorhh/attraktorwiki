@@ -12,6 +12,7 @@ configs:
       $$wgDBname      = "${MYSQL_DATABASE}";
       $$wgDBuser      = "${MYSQL_USER}";
       $$wgDBpassword  = "${SERVICE_PASSWORD_DBUSERPW}";
+      $$phpDebug      = "${MW_PHP_DEBUG}";
       $$wgSMTP = [
         'host'      => "${SMTP_HOST}",
         'IDHost'    => "${SMTP_IDHOST}",
@@ -40,7 +41,6 @@ services:
       service: mediawiki
     volumes:
       - mediawiki-images:/var/www/html/images
-      - mediawiki-composer-cache:/var/www/html/.composer/cache
       - /mnt/backups/attraktorwiki:/mnt/backups
     healthcheck:
       test:
