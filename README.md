@@ -88,31 +88,33 @@ Please refer to the [LOCAL.md](./docs/LOCAL.md) document for detailed instructio
 > [!NOTE]
 > The first deployment will throw errors because the database is empty. This is expected.
 
-- Copy database backup and images to Coolify server's shared storage, e.g. to `/mnt/shared/` mounted in both mariadb and mediawiki containers.
+- Copy database backup and images to Coolify server's backup storage, e.g. to `/mnt/backups/attraktorwiki/` mounted in mediawiki container. (several options to do this):
+  - use `duplicati` to restore from S3 backup. (preferred!)
   - use `scp` or similar tool to transfer files via commandline.
   - or use `zipline` or `filebrowser` container in Coolify to upload files via web interface.
-  - then move/copy files to `/mnt/shared/` folder using host terminal.
+  - then move/copy files to `/mnt/backups/attraktorwiki/` folder using host terminal.
 - restore database (run inside mariadb container)
 
    ```shell
-   gunzip < /mnt/shared/attraktorwiki.REL1_43.sql.gz | mariadb -u ${MYSQL_USER} -p${MYSQL_PASSWORD} ${MYSQL_DATABASE}
+   restore_db.sh
    ```
 
 - restore images (run inside mediawiki container)
 
    ```shell
-   tar -xvzf /mnt/shared/attraktorwiki.images.tar.gz -C /var/www/html/ && \
-   chown -R www-data:www-data /var/www/html/images
+   restore_images.sh
    ```
 
 - update MediaWiki and run jobs (run inside mediawiki container)
 
    ```shell
-   php maintenance/run.php update --quick && \
-   php maintenance/run.php runJobs
+   post_deployment.sh
    ```
 
-## Add Extensions
+> [!NOTE]
+> all the above scripts are located in `/usr/local/bin/` inside the container so you can run them from anywhere without specifying the full path.
+
+## Add Extensions (try out on local setup first!)
 
 - Extensions hosted on packagist can be added via composer. Multiple options:
   - Run inside mediawiki container (will be lost on container rebuild):

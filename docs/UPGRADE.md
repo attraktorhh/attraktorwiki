@@ -44,24 +44,51 @@
   docker compose exec mediawiki tar czf attraktorwiki.REL1_27.fs.tar.gz /var/www/html && docker compose cp mediawiki:/var/www/html/attraktorwiki.REL1_27.fs.tar.gz ./backups/ && docker compose exec mediawiki rm /var/www/html/attraktorwiki.REL1_27.fs.tar.gz
   ```
 
+- Backup just images
+
+  ```bash
+  docker compose exec mediawiki backup_images.sh
+  ```
+
 - Backup the database
 
   ```bash
   docker compose exec mediawikidb mariadb-dump -u attraktorwiki -p${SERVICE_PASSWORD_DBUSERPW} --default-character-set=binary --single-transaction attraktorwiki | gzip > ./backups/attraktorwiki.REL1_27.sql.gz
   ```
 
-- setup database
+  or
 
-  ```bash
-  docker compose exec mediawikidb sh -lc 'mysqladmin -u root -p${SERVICE_PASSWORD_DBROOTPW} drop attraktorwiki'
-
-  docker compose exec mediawikidb sh -lc 'mysqladmin -u attraktorwiki -p${SERVICE_PASSWORD_DBUSERPW} create attraktorwiki --default-character-set=binary'
+  ```shell
+  docker compose exec mediawiki backup_db.sh
   ```
+
+- setup database
+  - older versions of mariadb/mysql
+
+    ```bash
+    docker compose exec mediawikidb sh -lc 'mysqladmin -u root -p${SERVICE_PASSWORD_DBROOTPW} drop attraktorwiki'
+
+    docker compose exec mediawikidb sh -lc 'mysqladmin -u attraktorwiki -p${SERVICE_PASSWORD_DBUSERPW} create attraktorwiki --default-character-set=binary'
+    ```
+
+  - newer versions of mariadb/mysql
+
+    ```bash
+    docker compose exec mediawikidb sh -lc 'mariadb-admin -u root -p${SERVICE_PASSWORD_DBROOTPW} drop attraktorwiki'
+
+    docker compose exec mediawikidb sh -lc 'mariadb-admin -u attraktorwiki -p${SERVICE_PASSWORD_DBUSERPW} create attraktorwiki --default-character-set=binary'
+    ```
 
 - restore database backup
 
   ```bash
   source '.env' && gunzip < ./backups/attraktorwiki.REL1_27.sql.gz | docker compose exec -T mediawikidb mysql -u attraktorwiki -p${SERVICE_PASSWORD_DBUSERPW} attraktorwiki
+  ```
+
+  or
+
+  ```bash
+  docker compose exec mediawiki restore_db.sh
   ```
 
 ## Upgrade steps
