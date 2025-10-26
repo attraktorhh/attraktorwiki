@@ -1,4 +1,4 @@
-backup/*
+backups/*
 .env
 LocalSecrets.php
 images

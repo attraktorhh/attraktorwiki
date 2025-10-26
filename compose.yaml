@@ -37,9 +37,8 @@ services:
       - "8080:80"
     volumes:
       - mediawiki-composer-cache:/var/www/html/.composer/cache
-      - ./shared:/mnt/shared:ro
-      - ./backup/attraktorwiki:/mnt/backups:rw
-      - ./images:/var/www/html/images:rw
+      - ./backups/attraktorwiki:/mnt/backups
+      - ./images:/var/www/html/images
       - ./skins/attraktor:/var/www/html/skins/attraktor
       - ./configs/composer.local.json:/var/www/html/composer.local.json
       - ./configs/LocalSettings.php:/var/www/html/LocalSettings.php

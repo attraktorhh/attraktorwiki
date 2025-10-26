@@ -28,7 +28,6 @@ services:
       service: mariadb
     volumes:
       - mediawiki-mysql:/var/lib/mysql
-      - /mnt/shared:/mnt/shared:ro
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect"]
       start_period: 10s
@@ -40,10 +39,9 @@ services:
       file: compose.common.yaml
       service: mediawiki
     volumes:
-      - 'mediawiki-images:/var/www/html/images'
-      - 'mediawiki-composer-cache:/var/www/html/.composer/cache'
-      - /mnt/shared:/mnt/shared:ro
-      - /mnt/backups/attraktorwiki:/mnt/backups:rw
+      - mediawiki-images:/var/www/html/images
+      - mediawiki-composer-cache:/var/www/html/.composer/cache
+      - /mnt/backups/attraktorwiki:/mnt/backups
     healthcheck:
       test:
         - CMD
