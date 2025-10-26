@@ -18,5 +18,3 @@ configs:
         'username'  => "${SMTP_USERNAME}",
         'password'  => "${SMTP_PASSWORD}"
       ];
-  backup_db_script:
-    file: ./scripts/backup_db.sh
