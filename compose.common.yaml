@@ -1,5 +1,6 @@
 name: attraktorwiki
-
+include:
+  - compose.configs.yaml
 services:
   mariadb:
     image: mariadb:lts
