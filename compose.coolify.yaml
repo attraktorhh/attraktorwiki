@@ -1,9 +1,5 @@
 name: attraktorwiki
-include:
-  - compose.configs.yaml
-configs:
-  mediawiki_secrets:
-    external: true
+
 services:
   mariadb:
     extends:
@@ -22,9 +18,6 @@ services:
     extends:
       file: compose.common.yaml
       service: mediawiki
-    configs:
-      - source: mediawiki_secrets
-        target: /var/www/data/LocalSecrets.php
     volumes:
       - 'mediawiki-images:/var/www/html/images'
       - 'mediawiki-composer-cache:/var/www/html/.composer/cache'

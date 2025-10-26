@@ -1,6 +1,25 @@
 name: attraktorwiki
-include:
-  - compose.configs.yaml
+configs:
+  mediawiki_secrets:
+    content: |
+      <?php
+      $$wgSecretKey   = "${SERVICE_PASSWORD_64_APPSECRET}";
+      $$wgServer      = "${SERVICE_URL_MEDIAWIKI}";
+      $$wgFQDN        = "${SERVICE_FQDN_MEDIAWIKI}";
+      $$wgDBtype      = "mysql";
+      $$wgDBserver    = "${SERVICE_NAME_MARIADB}";
+      $$wgDBname      = "${MYSQL_DATABASE}";
+      $$wgDBuser      = "${MYSQL_USER}";
+      $$wgDBpassword  = "${SERVICE_PASSWORD_DBUSERPW}";
+      $$wgSMTP = [
+        'host'      => "${SMTP_HOST}",
+        'IDHost'    => "${SMTP_IDHOST}",
+        'port'      => ${SMTP_PORT},
+        'auth'      => ${SMTP_AUTH},
+        'username'  => "${SMTP_USERNAME}",
+        'password'  => "${SMTP_PASSWORD}"
+      ];
+
 services:
   mariadb:
     image: mariadb:11.8
@@ -19,6 +38,9 @@ services:
     restart: unless-stopped
     depends_on:
       - mariadb
+    configs:
+      - source: mediawiki_secrets
+        target: /var/www/data/LocalSecrets.php      
     environment:
       - MYSQL_HOST=${SERVICE_NAME_MARIADB}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
