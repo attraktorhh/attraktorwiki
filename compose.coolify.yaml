@@ -40,6 +40,18 @@ services:
     extends:
       file: compose.common.yaml
       service: mediawiki
+    environment:
+      - MYSQL_HOST=${SERVICE_NAME_MARIADB}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW}
+      - MEDIAWIKI_APPSECRET=${SERVICE_PASSWORD_64_APPSECRET:?}
+      - SMTP_HOST=${SMTP_HOST:?}
+      - SMTP_IDHOST=${SMTP_IDHOST:?}
+      - SMTP_PORT=${SMTP_PORT:?587}
+      - SMTP_AUTH=${SMTP_AUTH:?true}
+      - SMTP_USERNAME=${SMTP_USERNAME:?}
+      - SMTP_PASSWORD=${SMTP_PASSWORD:?}
     volumes:
       - mediawiki-images:/var/www/html/images
       - /mnt/backups/attraktorwiki:/mnt/backups
