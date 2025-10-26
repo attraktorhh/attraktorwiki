@@ -28,6 +28,7 @@ services:
       service: mariadb
     volumes:
       - mediawiki-mysql:/var/lib/mysql
+      - ./shared:/mnt/shared:ro
   mediawiki:
     extends:
       file: compose.common.yaml
