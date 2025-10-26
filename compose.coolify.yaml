@@ -28,6 +28,11 @@ services:
     extends:
       file: compose.common.yaml
       service: mariadb
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE:?attraktorwiki}
+      - MYSQL_USER=${MYSQL_USER:?attraktorwiki}
+      - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW:?}
+      - MYSQL_ROOT_PASSWORD=${SERVICE_PASSWORD_DBROOTPW:?}
     volumes:
       - mediawiki-mysql:/var/lib/mysql
     healthcheck:
