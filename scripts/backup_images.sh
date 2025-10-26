@@ -8,7 +8,7 @@ BACKUP_DIR="${BACKUP_DIR:-/mnt/backups}"
 RETRIES="${BACKUP_RETRIES:-3}"          # Number of attempts
 RETRY_DELAY="${BACKUP_RETRY_DELAY:-2}"   # Seconds between attempts
 
-OUTFILE="${BACKUP_DIR}/images.tar.gz"
+OUTFILE="${BACKUP_DIR}/attraktorwiki.images.tar.gz"
 TMPFILE="${OUTFILE}.tmp"
 ERRFILE="${OUTFILE}.err"
 
