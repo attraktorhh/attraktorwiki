@@ -13,6 +13,7 @@ configs:
       $$wgDBuser      = "${MYSQL_USER}";
       $$wgDBpassword  = "${SERVICE_PASSWORD_DBUSERPW}";
       $$phpDebug      = "${MW_PHP_DEBUG}";
+      $$wgReadonly    = "${MW_READONLY}";
       $$wgSMTP = [
         'host'      => "${SMTP_HOST}",
         'IDHost'    => "${SMTP_IDHOST}",

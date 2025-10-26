@@ -230,9 +230,12 @@ foreach ( $actions as $action ) {
 
 # Debug
 if ( isset( $phpDebug ) && $phpDebug == true ) {
-	echo "PHP Debug is enabled";
 	$wgShowExceptionDetails = true;
 	$wgDevelopmentWarnings = true;
 	error_reporting( E_ALL );
 	ini_set( 'display_errors', 1 );
+}
+
+if ( PHP_SAPI !== 'cli' && isset( $wgReadOnly ) && $wgReadOnly === true ) {
+	$wgReadOnly = 'Dieses Wiki ist im Wartungsmodus, Änderungen sind zur zeit nicht möglich.';
 }
