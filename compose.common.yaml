@@ -7,6 +7,7 @@ services:
     restart: unless-stopped
     volumes:
       - mediawiki-mysql:/var/lib/mysql
+      - ./scripts/backup_db.sh:/usr/local/bin/backup_db.sh
 
   mediawiki:
     build: .
@@ -17,3 +18,4 @@ services:
     volumes:
       - 'mediawiki-images:/var/www/html/images'
       - 'mediawiki-composer-cache:/var/www/html/.composer/cache'
+      - ./scripts/backup_images.sh:/usr/local/bin/backup_images.sh

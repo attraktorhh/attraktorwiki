@@ -35,7 +35,6 @@ services:
       - mediawiki-mysql:/var/lib/mysql
       - /mnt/shared:/mnt/shared:ro
       - /mnt/backups/attraktorwiki/mariadb:/mnt/backups:rw
-      - ./scripts/backup_images.sh:/usr/local/bin/backup_images.sh
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect"]
       start_period: 10s
@@ -62,7 +61,6 @@ services:
       - 'mediawiki-composer-cache:/var/www/html/.composer/cache'
       - /mnt/shared:/mnt/shared:ro
       - /mnt/backups/attraktorwiki/mediawiki:/mnt/backups:rw
-      - ./scripts/backup_db.sh:/usr/local/bin/backup_db.sh
     healthcheck:
       test:
         - CMD
