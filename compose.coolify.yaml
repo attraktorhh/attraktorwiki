@@ -26,33 +26,24 @@ services:
     extends:
       file: compose.common.yaml
       service: mariadb
-    environment:
-      - MYSQL_DATABASE=${MYSQL_DATABASE:?attraktorwiki}
-      - MYSQL_USER=${MYSQL_USER:?attraktorwiki}
-      - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW:?}
-      - MYSQL_ROOT_PASSWORD=${SERVICE_PASSWORD_DBROOTPW:?}
     volumes:
       - mediawiki-mysql:/var/lib/mysql
       - /mnt/shared:/mnt/shared:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
   mediawiki:
     extends:
       file: compose.common.yaml
       service: mediawiki
-    environment:
-      - MEDIAWIKI_APPSECRET=${SERVICE_PASSWORD_64_APPSECRET:?}
-      - SMTP_HOST=${SMTP_HOST:?}
-      - SMTP_IDHOST=${SMTP_IDHOST:?}
-      - SMTP_PORT=${SMTP_PORT:?587}
-      - SMTP_AUTH=${SMTP_AUTH:?true}
-      - SMTP_USERNAME=${SMTP_USERNAME:?}
-      - SMTP_PASSWORD=${SMTP_PASSWORD:?}
-    configs:
-      - source: mediawiki_secrets
-        target: /var/www/data/LocalSecrets.php
     volumes:
       - 'mediawiki-images:/var/www/html/images'
       - 'mediawiki-composer-cache:/var/www/html/.composer/cache'
       - /mnt/shared:/mnt/shared:ro
+      - /mnt/backups/attraktorwiki:/mnt/backups:rw
     healthcheck:
       test:
         - CMD

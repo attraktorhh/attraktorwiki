@@ -4,39 +4,42 @@ configs:
   mediawiki_secrets:
     content: |
       <?php
-      $$wgSecretKey   = "${SERVICE_PASSWORD_64_APPSECRET:?}";
-      $$wgServer      = "${SERVICE_URL_MEDIAWIKI:?}";
-      $$wgFQDN        = "${SERVICE_FQDN_MEDIAWIKI:?}";
+      $$wgSecretKey   = "${SERVICE_PASSWORD_64_APPSECRET}";
+      $$wgServer      = "${SERVICE_URL_MEDIAWIKI}";
+      $$wgFQDN        = "${SERVICE_FQDN_MEDIAWIKI}";
       $$wgDBtype      = "mysql";
-      $$wgDBserver    = "${SERVICE_NAME_MARIADB:?}";
-      $$wgDBname      = "${MYSQL_DATABASE:?attraktorwiki}";
-      $$wgDBuser      = "${MYSQL_USER:?attraktorwiki}";
-      $$wgDBpassword  = "${SERVICE_PASSWORD_DBUSERPW:?}";
+      $$wgDBserver    = "${SERVICE_NAME_MARIADB}";
+      $$wgDBname      = "${MYSQL_DATABASE}";
+      $$wgDBuser      = "${MYSQL_USER}";
+      $$wgDBpassword  = "${SERVICE_PASSWORD_DBUSERPW}";
+      $$wgSMTP = [
+        'host'      => "${SMTP_HOST}",
+        'IDHost'    => "${SMTP_IDHOST}",
+        'port'      => ${SMTP_PORT},
+        'auth'      => ${SMTP_AUTH},
+        'username'  => "${SMTP_USERNAME}",
+        'password'  => "${SMTP_PASSWORD}"
+      ];
 
 services:
   mariadb:
     extends:
       file: compose.common.yaml
       service: mariadb
-    environment:
-      - MYSQL_DATABASE=${MYSQL_DATABASE:?attraktorwiki}
-      - MYSQL_USER=${MYSQL_USER:?attraktorwiki}
-      - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW:?}
-      - MYSQL_ROOT_PASSWORD=${SERVICE_PASSWORD_DBROOTPW:?}
     volumes:
       - mediawiki-mysql:/var/lib/mysql
+      - ./shared:/mnt/shared:ro
   mediawiki:
     extends:
       file: compose.common.yaml
       service: mediawiki
     ports:
       - "8080:80"
-    configs:
-      - source: mediawiki_secrets
-        target: /var/www/data/LocalSecrets.php
     volumes:
       - mediawiki-composer-cache:/var/www/html/.composer/cache
-      - ./images:/var/www/html/images
+      - ./shared:/mnt/shared:ro
+      - ./backup/attraktorwiki:/mnt/backups:rw
+      - ./images:/var/www/html/images:rw
       - ./skins/attraktor:/var/www/html/skins/attraktor
       - ./configs/composer.local.json:/var/www/html/composer.local.json
       - ./configs/LocalSettings.php:/var/www/html/LocalSettings.php

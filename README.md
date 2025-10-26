@@ -45,7 +45,7 @@ Please refer to the [LOCAL.md](./docs/LOCAL.md) document for detailed instructio
 - Post-deployment for Container: `mediawiki`:
 
     ```shell
-    sleep 10s && php maintenance/run.php update --quick && php maintenance/run.php runJobs
+    post_deployment.sh
     ```
 
 #### Environment Variables
@@ -61,7 +61,25 @@ Please refer to the [LOCAL.md](./docs/LOCAL.md) document for detailed instructio
 
 #### Scheduled Tasks
 
-- ToDo: add backups of database and images here
+- Add Backup Job for Database (e.g. daily at 2am)
+  - Name: `Database Backup`
+  - Frequency: `daily`
+  - Command:
+
+    ```shell
+    backup_db.sh
+    ```
+
+- Add Backup Job for Images (e.g. monthly at 2am)
+  - Name: `Images Backup`
+  - Frequency: `monthly`
+  - Command:
+
+    ```shell
+    BACKUP_RETRIES=5 BACKUP_RETRY_DELAY=1 backup_images.sh
+    ```
+
+- Backups will be synced with S3 Bucket via Duplicati container in Coolify.
 
 ### First time Setup (Or Restore from Backup)
 
