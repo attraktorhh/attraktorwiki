@@ -1,7 +1,9 @@
 # Attraktor Wiki
 
 MediaWiki instance for Attraktor e.V.
+
 <https://wiki.attraktor.org/Attraktor_Wiki>
+
 <https://www.mediawiki.org/wiki/Version_lifecycle>
 
 ## Upgrading to new MediaWiki Version
