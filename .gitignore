@@ -1,6 +1,3 @@
-backups/*
 .env
-LocalSecrets.php
-images
-configs/LocalSettings_original.php
-shared
+backups/*
+images/*
