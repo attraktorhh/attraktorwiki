@@ -2,14 +2,15 @@
 
 ## Upgrade path
 
-- 1.23 (initial attraktorwiki version)
-- 1.27
-- 1.31
-- 1.34
-- 1.35
-- 1.39
-- 1.42
-- 1.43
+- 1.23.9 (initial attraktorwiki version)
+- 1.27.4
+- 1.31.0
+- 1.34.0
+- 1.35.0
+- 1.39.0
+- 1.42.0
+- 1.43.1
+- 1.43.0
 - future LTS versions...
 
 ## Common Commands
@@ -23,7 +24,7 @@
 - run the MediaWiki database update script
 
   ```bash
-  docker compose exec -u www-data mediawiki php maintenance/update.php --quick
+  docker compose exec mediawiki php maintenance/update.php --quick
   ```
 
 - run the MediaWiki database update script (1.40 and later)
@@ -47,8 +48,13 @@
 - restore database
 
   ```bash
-  gunzip < ./backups/attraktorwiki/REL1_27.db.sql.gz | \
-  docker compose exec -T mariadb bash -lc 'mariadb -u ${MYSQL_USER} -p${MYSQL_PASSWORD} ${MYSQL_DATABASE}'
+  gunzip < ./backups/attraktorwiki/REL1_23.db.sql.gz | docker compose exec -T mariadb bash -lc 'mariadb -u ${MYSQL_USER} -p${MYSQL_PASSWORD} ${MYSQL_DATABASE}'
+  ```
+
+- Restore images
+
+  ```shell
+  docker compose exec mediawiki tar -xz -f /mnt/backups/REL1_23.images.tar.gz -C /var/www/html/
   ```
 
 - setup database
@@ -77,6 +83,7 @@
 - rebuild with `docker compose down && docker compose build && docker compose up -d`
 - verify all extensions were properly cloned during build
 - run updater script to update the database schema
+- run `php extensions/SemanticMediaWiki/maintenance/rebuildData.php -v`
 - test the wiki functionality
 - Backup the database (IMPORTANT)
 - next version!

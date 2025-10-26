@@ -11,7 +11,10 @@ services:
       - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW:?}
       - MYSQL_ROOT_PASSWORD=${SERVICE_PASSWORD_DBROOTPW:?}
   mediawiki:
-    build: .
+    build:
+      context: .
+      tags:
+        - "attraktorwiki:1.43"
     container_name: attr_mediawiki
     restart: unless-stopped
     depends_on:
