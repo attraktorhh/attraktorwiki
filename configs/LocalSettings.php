@@ -111,9 +111,18 @@ $wgAuthenticationTokenVersion = "1";
 ## appropriate copyright notice / icon. GNU Free Documentation
 ## License and Creative Commons licenses are supported so far.
 $wgRightsPage = ""; # Set to the title of a wiki page that describes your license/copyright
-$wgRightsUrl = "";
-$wgRightsText = "";
-$wgRightsIcon = "";
+$wgRightsUrl = "http://creativecommons.org/licenses/by-nc-sa/3.0/";
+$wgRightsText = "Attribution-NonCommercial-ShareAlike 3.0";
+$wgRightsIcon = "http://creativecommons.org/images/public/somerights.png";
+// $wgFooterIcons['copyright']['copyright'] = "http://creativecommons.org/images/public/somerights.png";
+$wgFooterIcons = [
+	"copyright" => [
+		"copyright" => [
+			"src" => "http://creativecommons.org/images/public/somerights.png",
+			"alt" => "creativecommons somerights",
+		], // placeholder for the built in copyright icon
+	]
+];
 
 # Path to the GNU diff3 utility. Used for conflict resolution.
 $wgDiff3 = "/usr/bin/diff3";
@@ -122,21 +131,16 @@ $wgDiff3 = "/usr/bin/diff3";
 $wgGroupPermissions["*"]["createaccount"] = false;
 $wgGroupPermissions["*"]["edit"] = false;
 
-## Default skin: you can change the default skin. Use the internal symbolic
-## names, e.g. 'vector' or 'monobook':
-$wgDefaultSkin = "vector";
-// $wgDefaultSkin = 'attraktor';
-
 # Enabled skins.
 // require_once "$IP/skins/attraktor/Attraktor.php";
 # The following skins were automatically enabled:
 wfLoadSkin( 'MonoBook' );
 wfLoadSkin( 'Vector' );
 
-# Enabled extensions. Most of the extensions are enabled by adding
-# wfLoadExtension( 'ExtensionName' );
-# to LocalSettings.php. Check specific extension documentation for more details.
-# The following extensions were automatically enabled:
+## Default skin: you can change the default skin. Use the internal symbolic
+## names, e.g. 'vector' or 'monobook':
+$wgDefaultSkin = "vector";
+// $wgDefaultSkin = 'attraktor';
 
 
 # End of automatically generated settings.
@@ -147,6 +151,11 @@ wfLoadSkin( 'Vector' );
 $wgGroupPermissions['user']['upload'] = true;
 $wgGroupPermissions['bot']['delete'] = true;
 $wgGroupPermissions['bot']['bigdelete'] = true;
+
+# Enabled extensions. Most of the extensions are enabled by adding
+# wfLoadExtension( 'ExtensionName' );
+# to LocalSettings.php. Check specific extension documentation for more details.
+# The following extensions were automatically enabled:
 
 # preinstalled extensions
 wfLoadExtension( 'Cite' );
@@ -193,6 +202,7 @@ wfLoadExtension( 'Widgets' );
 $wgGroupPermissions['bureaucrat']['editwidgets'] = true;
 $wgGroupPermissions['sysop']['editwidgets'] = true;
 wfLoadExtension( 'PluggableAuth' );
+$wgPluggableAuth_EnableLocalLogin = true;
 wfLoadExtension( 'OpenIDConnect' );
 
 # extensions installed via composer
@@ -219,4 +229,10 @@ foreach ( $actions as $action ) {
 }
 
 # Debug
-$wgShowExceptionDetails = true;
+if ( isset( $phpDebug ) && $phpDebug == true ) {
+	echo "PHP Debug is enabled";
+	$wgShowExceptionDetails = true;
+	$wgDevelopmentWarnings = true;
+	error_reporting( E_ALL );
+	ini_set( 'display_errors', 1 );
+}
