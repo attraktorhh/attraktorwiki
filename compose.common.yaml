@@ -5,11 +5,6 @@ services:
     image: mariadb:11.8
     container_name: attr_mariadb
     restart: unless-stopped
-    environment:
-      - MYSQL_DATABASE=${MYSQL_DATABASE:?attraktorwiki}
-      - MYSQL_USER=${MYSQL_USER:?attraktorwiki}
-      - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW:?}
-      - MYSQL_ROOT_PASSWORD=${SERVICE_PASSWORD_DBROOTPW:?}
   mediawiki:
     build:
       context: .
@@ -22,16 +17,3 @@ services:
     configs:
       - source: mediawiki_secrets
         target: /var/www/data/LocalSecrets.php      
-    environment:
-      - MYSQL_HOST=${SERVICE_NAME_MARIADB}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW}
-      - MEDIAWIKI_APPSECRET=${SERVICE_PASSWORD_64_APPSECRET:?}
-      - SMTP_HOST=${SMTP_HOST:?}
-      - SMTP_IDHOST=${SMTP_IDHOST:?}
-      - SMTP_PORT=${SMTP_PORT:?587}
-      - SMTP_AUTH=${SMTP_AUTH:?true}
-      - SMTP_USERNAME=${SMTP_USERNAME:?}
-      - SMTP_PASSWORD=${SMTP_PASSWORD:?}
-      
