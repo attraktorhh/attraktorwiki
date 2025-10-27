@@ -11,20 +11,6 @@ RUN apt update && \
 
 COPY --from=composer/composer:2.8-bin /composer /usr/bin/composer
 
-COPY ./configs/composer.local.json /var/www/html/composer.local.json
-COPY ./configs/LocalSettings.php /var/www/html/LocalSettings.php
-COPY ./configs/.htaccess /var/www/html/.htaccess
-COPY ./skins /var/www/html/skins
-COPY ./scripts/* /usr/local/bin/
-
-WORKDIR /var/www/html
-
-RUN chown -R www-data:www-data ./skins ./vendor
-RUN chown www-data:www-data composer.local.json LocalSettings.php .htaccess
-
-RUN chmod 640 composer.local.json LocalSettings.php .htaccess
-RUN chmod -R +x /usr/local/bin/
-
 USER www-data
 ARG GERRIT_BASE_URL="https://gerrit.wikimedia.org/r/mediawiki/extensions"
 ARG MEDIAWIKI_RELEASE_BRANCH
@@ -43,8 +29,22 @@ RUN git clone --recurse-submodules -b ${MEDIAWIKI_RELEASE_BRANCH} ${GERRIT_BASE_
 RUN git clone --recurse-submodules -b ${MEDIAWIKI_RELEASE_BRANCH} ${GERRIT_BASE_URL}/OpenIDConnect.git
 
 WORKDIR /var/www/html
+USER root
+
+COPY ./configs/composer.local.json /var/www/html/composer.local.json
+RUN chmod 640 composer.local.json
+RUN chown www-data:www-data composer.local.json
 
 ENV COMPOSER_HOME=/var/www/html/.composer
 RUN composer update --no-dev --prefer-source
 
-USER root
+RUN chown -R www-data:www-data ./skins ./vendor
+
+COPY ./configs/LocalSettings.php /var/www/html/LocalSettings.php
+COPY ./configs/.htaccess /var/www/html/.htaccess
+COPY ./skins /var/www/html/skins
+COPY ./scripts/* /usr/local/bin/
+
+RUN chown www-data:www-data LocalSettings.php .htaccess
+RUN chmod 640 LocalSettings.php .htaccess
+RUN chmod -R +x /usr/local/bin/

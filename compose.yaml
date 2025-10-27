@@ -60,6 +60,7 @@ services:
       - ./skins/attraktor:/var/www/html/skins/attraktor
       - ./configs/composer.local.json:/var/www/html/composer.local.json
       - ./configs/LocalSettings.php:/var/www/html/LocalSettings.php
+      - ./configs/.htaccess:/var/www/html/.htaccess
 
 volumes:
   mediawiki-mysql:
