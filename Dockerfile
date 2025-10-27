@@ -32,19 +32,16 @@ WORKDIR /var/www/html
 USER root
 
 COPY ./configs/composer.local.json /var/www/html/composer.local.json
-RUN chmod 640 composer.local.json
 RUN chown www-data:www-data composer.local.json
 
 ENV COMPOSER_HOME=/var/www/html/.composer
 RUN composer update --no-dev --prefer-source
 
+COPY ./skins/* /var/www/html/skins/
 RUN chown -R www-data:www-data ./skins ./vendor
 
-COPY ./configs/LocalSettings.php /var/www/html/LocalSettings.php
-COPY ./configs/.htaccess /var/www/html/.htaccess
-COPY ./skins /var/www/html/skins
 COPY ./scripts/* /usr/local/bin/
+COPY ./configs/* /var/www/html/
 
-RUN chown www-data:www-data LocalSettings.php .htaccess
-RUN chmod 640 LocalSettings.php .htaccess
-RUN chmod -R +x /usr/local/bin/
+RUN chown www-data:www-data /var/www/html/*
+RUN chmod -R +x /usr/local/bin/*
