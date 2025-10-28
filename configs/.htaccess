@@ -1,4 +1,16 @@
+Options -MultiViews
+RewriteEngine On
+
+# 1) Calendar endpoint → real redirect to SMW iCal (keeps /calendar.ics from becoming a title)
+RewriteRule (?i)^calendar\.ics$ /index.php?title=Special:Ask/-5B-5BCategory:Termin-5D-5D-20-5B-5Bvisible::true-5D-5D/-3FDate=start/-3FEnddate=end/-3FTitle=description/-3FTitle=summary/-3FLocation/format=icalendar/limit=64/sort=Date/order=desc/searchlabel=Termine-20als-20iCal/title=Attraktor-20e.-20V.-20Kalender/description=Was-20ist-20los-20im-20Eschelsweg-204/offset=0 [R=301,L,NE]
+
+# 2) Let real files/dirs through (robots.txt, favicon.ico, load.php, api.php, images/, etc.)
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# 3) (optional) if you’re using REST, leave it alone
 RewriteCond %{REQUEST_URI} !^/w/rest\.php
-RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
-RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-d
-RewriteRule ^(.*)$ %{DOCUMENT_ROOT}/index.php [L]
+
+# 4) Generic root short-URL catch-all: everything else is a title
+RewriteRule ^ index.php [L]

@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /index.php?title=Special:UserLogin
+# Disallow queries if you like:
+# Disallow: /index.php
+
+# If you publish a sitemap:
+# Sitemap: https://wiki.attraktor.org/sitemap.xml
