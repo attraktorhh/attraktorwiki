@@ -11,6 +11,7 @@ RUN apt update && apt install -y iputils-ping nano
 # Install Composer to manage SemanticMediaWiki extensions
 COPY --from=composer/composer:2.8-bin /composer /usr/bin/composer
 
+# Install MediaWiki Extensions from Git repositories which are not on packagist
 USER www-data
 ARG MEDIAWIKI_RELEASE_BRANCH
 ARG GERRIT_BASE_URL="https://gerrit.wikimedia.org/r/mediawiki/extensions"
@@ -35,6 +36,7 @@ USER root
 COPY ./configs/composer.local.json /var/www/html/composer.local.json
 RUN chown www-data:www-data composer.local.json
 
+# Install composer dependencies for MediaWiki and extensions
 ENV COMPOSER_HOME=/var/www/html/.composer
 RUN composer update --no-dev --prefer-source
 

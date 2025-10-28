@@ -19,11 +19,14 @@ services:
       file: compose.common.yaml
       service: mediawiki
     environment:
+      # workaround for coolify not autogenerating env vars from configs, not really needed inside container
+      - MEDIAWIKI_APPSECRET=${SERVICE_PASSWORD_64_APPSECRET:?}
+      - MW_PHP_DEBUG=${MW_PHP_DEBUG:?false}
+      - MW_READONLY=${MW_READONLY:?false}
       - MYSQL_HOST=${SERVICE_NAME_MARIADB}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW}
-      - MEDIAWIKI_APPSECRET=${SERVICE_PASSWORD_64_APPSECRET:?}
       - SMTP_HOST=${SMTP_HOST:?}
       - SMTP_IDHOST=${SMTP_IDHOST:?}
       - SMTP_PORT=${SMTP_PORT:?587}
