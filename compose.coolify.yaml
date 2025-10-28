@@ -1,4 +1,42 @@
+# compose.coolify.yaml - contains overrides for coolify deployment and specific syntax
+
 name: attraktorwiki
+
+services:
+  mariadb:
+    extends:
+      file: compose.common.yaml
+      service: mariadb
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE:?attraktorwiki}
+      - MYSQL_USER=${MYSQL_USER:?attraktorwiki}
+      - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW:?}
+      - MYSQL_ROOT_PASSWORD=${SERVICE_PASSWORD_DBROOTPW:?}
+    volumes:
+      - mediawiki-mysql:/var/lib/mysql
+      - /mnt/backups/attraktorwiki:/mnt/backups
+  mediawiki:
+    extends:
+      file: compose.common.yaml
+      service: mediawiki
+    environment:
+      # workaround for coolify not autogenerating env vars from configs, not really needed inside container
+      - MEDIAWIKI_APPSECRET=${SERVICE_PASSWORD_64_APPSECRET:?}
+      - MW_PHP_DEBUG=${MW_PHP_DEBUG:?false}
+      - MW_READONLY=${MW_READONLY:?false}
+      - MYSQL_HOST=${SERVICE_NAME_MARIADB}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW}
+      - SMTP_HOST=${SMTP_HOST:?}
+      - SMTP_IDHOST=${SMTP_IDHOST:?}
+      - SMTP_PORT=${SMTP_PORT:?587}
+      - SMTP_AUTH=${SMTP_AUTH:?true}
+      - SMTP_USERNAME=${SMTP_USERNAME:?}
+      - SMTP_PASSWORD=${SMTP_PASSWORD:?}
+    volumes:
+      - mediawiki-images:/var/www/html/images
+      - /mnt/backups/attraktorwiki:/mnt/backups
 
 configs:
   mediawiki_secrets:
@@ -22,51 +60,3 @@ configs:
         'username'  => "${SMTP_USERNAME}",
         'password'  => "${SMTP_PASSWORD}"
       ];
-
-services:
-  mariadb:
-    extends:
-      file: compose.common.yaml
-      service: mariadb
-    environment:
-      - MYSQL_DATABASE=${MYSQL_DATABASE:?attraktorwiki}
-      - MYSQL_USER=${MYSQL_USER:?attraktorwiki}
-      - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW:?}
-      - MYSQL_ROOT_PASSWORD=${SERVICE_PASSWORD_DBROOTPW:?}
-    volumes:
-      - mediawiki-mysql:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect"]
-      start_period: 10s
-      interval: 10s
-      timeout: 5s
-      retries: 3
-  mediawiki:
-    extends:
-      file: compose.common.yaml
-      service: mediawiki
-    environment:
-      - MYSQL_HOST=${SERVICE_NAME_MARIADB}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW}
-      - MEDIAWIKI_APPSECRET=${SERVICE_PASSWORD_64_APPSECRET:?}
-      - SMTP_HOST=${SMTP_HOST:?}
-      - SMTP_IDHOST=${SMTP_IDHOST:?}
-      - SMTP_PORT=${SMTP_PORT:?587}
-      - SMTP_AUTH=${SMTP_AUTH:?true}
-      - SMTP_USERNAME=${SMTP_USERNAME:?}
-      - SMTP_PASSWORD=${SMTP_PASSWORD:?}
-    volumes:
-      - mediawiki-images:/var/www/html/images
-      - /mnt/backups/attraktorwiki:/mnt/backups
-    healthcheck:
-      test:
-        - CMD
-        - curl
-        - '-f'
-        - 'http://localhost:80'
-      interval: 5s
-      timeout: 20s
-      retries: 10
-

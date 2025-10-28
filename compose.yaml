@@ -1,57 +1,18 @@
-name: attraktorwiki
+# compose.yaml - local deployment overrides with bind mounts for development
 
-configs:
-  mediawiki_secrets:
-    content: |
-      <?php
-      $$wgSecretKey   = "${SERVICE_PASSWORD_64_APPSECRET}";
-      $$wgServer      = "${SERVICE_URL_MEDIAWIKI}";
-      $$wgFQDN        = "${SERVICE_FQDN_MEDIAWIKI}";
-      $$wgDBtype      = "mysql";
-      $$wgDBserver    = "${SERVICE_NAME_MARIADB}";
-      $$wgDBname      = "${MYSQL_DATABASE}";
-      $$wgDBuser      = "${MYSQL_USER}";
-      $$wgDBpassword  = "${SERVICE_PASSWORD_DBUSERPW}";
-      $$phpDebug      = "${MW_PHP_DEBUG}";
-      $$wgReadonly    = "${MW_READONLY}";
-      $$wgSMTP = [
-        'host'      => "${SMTP_HOST}",
-        'IDHost'    => "${SMTP_IDHOST}",
-        'port'      => ${SMTP_PORT},
-        'auth'      => ${SMTP_AUTH},
-        'username'  => "${SMTP_USERNAME}",
-        'password'  => "${SMTP_PASSWORD}"
-      ];
+name: attraktorwiki
 
 services:
   mariadb:
     extends:
       file: compose.common.yaml
       service: mariadb
-    environment:
-      - MYSQL_DATABASE=${MYSQL_DATABASE:?attraktorwiki}
-      - MYSQL_USER=${MYSQL_USER:?attraktorwiki}
-      - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW:?}
-      - MYSQL_ROOT_PASSWORD=${SERVICE_PASSWORD_DBROOTPW:?}
     volumes:
-      - mediawiki-mysql:/var/lib/mysql
-      - ./shared:/mnt/shared:ro
+      - ./backups/attraktorwiki:/mnt/backups
   mediawiki:
     extends:
       file: compose.common.yaml
       service: mediawiki
-    environment:
-      - MYSQL_HOST=${SERVICE_NAME_MARIADB}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW}
-      - MEDIAWIKI_APPSECRET=${SERVICE_PASSWORD_64_APPSECRET:?}
-      - SMTP_HOST=${SMTP_HOST:?}
-      - SMTP_IDHOST=${SMTP_IDHOST:?}
-      - SMTP_PORT=${SMTP_PORT:?587}
-      - SMTP_AUTH=${SMTP_AUTH:?true}
-      - SMTP_USERNAME=${SMTP_USERNAME:?}
-      - SMTP_PASSWORD=${SMTP_PASSWORD:?}
     ports:
       - "8080:80"
     volumes:
@@ -60,10 +21,34 @@ services:
       - ./skins/attraktor:/var/www/html/skins/attraktor
       - ./configs/composer.local.json:/var/www/html/composer.local.json
       - ./configs/LocalSettings.php:/var/www/html/LocalSettings.php
-
+      - ./configs/.htaccess:/var/www/html/.htaccess
+      - ./configs/robots.txt:/var/www/html/robots.txt
 volumes:
   mediawiki-mysql:
 
 networks:
   default:
     driver: bridge
+
+configs:
+  mediawiki_secrets:
+    content: |
+      <?php
+      $$wgSecretKey   = "${SERVICE_PASSWORD_64_APPSECRET:?error}";
+      $$wgServer      = "${SERVICE_URL_MEDIAWIKI:?error}";
+      $$wgFQDN        = "${SERVICE_FQDN_MEDIAWIKI:?error}";
+      $$wgDBtype      = "mysql";
+      $$wgDBserver    = "${SERVICE_NAME_MARIADB:?error}";
+      $$wgDBname      = "${MYSQL_DATABASE:-attraktorwiki}";
+      $$wgDBuser      = "${MYSQL_USER:-attraktorwiki}";
+      $$wgDBpassword  = "${SERVICE_PASSWORD_DBUSERPW:?error}";
+      $$phpDebug      = "${MW_PHP_DEBUG:-true}";
+      $$wgReadonly    = "${MW_READONLY:-false}";
+      $$wgSMTP = [
+        'host'      => "${SMTP_HOST:-}",
+        'IDHost'    => "${SMTP_IDHOST:-}",
+        'port'      => ${SMTP_PORT:-587},
+        'auth'      => ${SMTP_AUTH:-true},
+        'username'  => "${SMTP_USERNAME:-}",
+        'password'  => "${SMTP_PASSWORD:-}"
+      ];

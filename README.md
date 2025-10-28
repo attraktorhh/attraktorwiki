@@ -66,6 +66,7 @@ Please refer to the [LOCAL.md](./docs/LOCAL.md) document for detailed instructio
 - Add Backup Job for Database (e.g. daily at 2am)
   - Name: `Database Backup`
   - Frequency: `daily`
+  - Container: `mariadb`
   - Command:
 
     ```shell
@@ -75,10 +76,11 @@ Please refer to the [LOCAL.md](./docs/LOCAL.md) document for detailed instructio
 - Add Backup Job for Images (e.g. monthly at 2am)
   - Name: `Images Backup`
   - Frequency: `monthly`
+  - Container: `mediawiki`
   - Command:
 
     ```shell
-    BACKUP_RETRIES=5 BACKUP_RETRY_DELAY=1 backup_images.sh
+    backup_images.sh
     ```
 
 - Backups will be synced with S3 Bucket via Duplicati container in Coolify.
@@ -95,23 +97,15 @@ Please refer to the [LOCAL.md](./docs/LOCAL.md) document for detailed instructio
   - use `scp` or similar tool to transfer files via commandline.
   - or use `zipline` or `filebrowser` container in Coolify to upload files via web interface.
   - then move/copy files to `/mnt/backups/attraktorwiki/` folder using host terminal.
-- restore database (run inside mariadb container)
+- run commands in mediawiki container to restore database and images from backup files:
 
-   ```shell
-   restore_db.sh
-   ```
+  ```shell
+  restore_db.sh
 
-- restore images (run inside mediawiki container)
+  restore_images.sh
 
-   ```shell
-   restore_images.sh
-   ```
-
-- update MediaWiki and run jobs (run inside mediawiki container)
-
-   ```shell
-   post_deployment.sh
-   ```
+  post_deployment.sh
+  ```
 
 > [!NOTE]
 > all the above scripts are located in `/usr/local/bin/` inside the container so you can run them from anywhere without specifying the full path.
