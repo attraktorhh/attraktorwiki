@@ -13,6 +13,7 @@ services:
       - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW:?}
       - MYSQL_ROOT_PASSWORD=${SERVICE_PASSWORD_DBROOTPW:?}
     volumes:
+      - mediawiki-mysql:/var/lib/mysql
       - /mnt/backups/attraktorwiki:/mnt/backups
   mediawiki:
     extends:
