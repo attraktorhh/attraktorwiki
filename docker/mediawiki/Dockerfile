@@ -6,7 +6,7 @@ ARG MEDIAWIKI_RELEASE_BRANCH="REL1_43"
 FROM mediawiki:${MEDIAWIKI_IMAGE_VERSION}
 
 ## Install additional packages, might be inefficient but makes debugging easier
-RUN apt update && apt install -y iputils-ping nano
+RUN apt update && apt install -y iputils-ping nano zip unzip
 
 # Install Composer to manage SemanticMediaWiki extensions
 COPY --from=composer/composer:2.8-bin /composer /usr/bin/composer
