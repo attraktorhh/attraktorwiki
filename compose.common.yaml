@@ -1,13 +1,31 @@
+# compose.common.yaml - contains basic service definitions applicable for local and coolify deployments
+
 name: attraktorwiki
 
 services:
   mariadb:
-    image: mariadb:11.8
+    build:
+      context: .
+      dockerfile: ./docker/mariadb/Dockerfile
     container_name: attr_mariadb
     restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-attraktorwiki}
+      - MYSQL_USER=${MYSQL_USER:-attraktorwiki}
+      - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW:?error}
+      - MYSQL_ROOT_PASSWORD=${SERVICE_PASSWORD_DBROOTPW:?error}
+    volumes:
+      - mediawiki-mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
   mediawiki:
     build:
       context: .
+      dockerfile: ./docker/mediawiki/Dockerfile
       tags:
         - "attraktorwiki:1.43"
     container_name: attr_mediawiki
@@ -16,4 +34,25 @@ services:
       - mariadb
     configs:
       - source: mediawiki_secrets
-        target: /var/www/data/LocalSecrets.php      
+        target: /var/www/data/LocalSecrets.php     
+    environment:
+      - MYSQL_HOST=${SERVICE_NAME_MARIADB:-mariadb}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-attraktorwiki}
+      - MYSQL_USER=${MYSQL_USER:-attraktorwiki}
+      - MYSQL_PASSWORD=${SERVICE_PASSWORD_DBUSERPW:?error}
+      - MEDIAWIKI_APPSECRET=${SERVICE_PASSWORD_64_APPSECRET:?error}
+      - SMTP_HOST=${SMTP_HOST:-}
+      - SMTP_IDHOST=${SMTP_IDHOST:-}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_AUTH=${SMTP_AUTH:-true}
+      - SMTP_USERNAME=${SMTP_USERNAME:-}
+      - SMTP_PASSWORD=${SMTP_PASSWORD:-}
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - '-f'
+        - 'http://localhost:80'
+      interval: 5s
+      timeout: 20s
+      retries: 10 

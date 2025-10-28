@@ -66,6 +66,7 @@ Please refer to the [LOCAL.md](./docs/LOCAL.md) document for detailed instructio
 - Add Backup Job for Database (e.g. daily at 2am)
   - Name: `Database Backup`
   - Frequency: `daily`
+  - Container: `mariadb`
   - Command:
 
     ```shell
@@ -75,10 +76,11 @@ Please refer to the [LOCAL.md](./docs/LOCAL.md) document for detailed instructio
 - Add Backup Job for Images (e.g. monthly at 2am)
   - Name: `Images Backup`
   - Frequency: `monthly`
+  - Container: `mediawiki`
   - Command:
 
     ```shell
-    BACKUP_RETRIES=5 BACKUP_RETRY_DELAY=1 backup_images.sh
+    backup_images.sh
     ```
 
 - Backups will be synced with S3 Bucket via Duplicati container in Coolify.
