@@ -204,6 +204,7 @@ $wgGroupPermissions['sysop']['editwidgets'] = true;
 wfLoadExtension( 'PluggableAuth' );
 $wgPluggableAuth_EnableLocalLogin = true;
 wfLoadExtension( 'OpenIDConnect' );
+wfLoadExtension( 'MarkdownWiki' );
 
 # extensions installed via composer
 wfLoadExtension( 'SemanticMediaWiki' );

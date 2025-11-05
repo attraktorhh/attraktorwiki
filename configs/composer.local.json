@@ -2,7 +2,9 @@
 	"require": {
         "mediawiki/semantic-media-wiki": "^6.0",
 		"mediawiki/semantic-result-formats": "^5.1",
-		"mediawiki/page-forms": "^6.0"
+		"mediawiki/page-forms": "^6.0",
+		"mediawiki/mermaid": "^6.0",
+		"paveld/mw-markdown-wiki": "^0.3.2"
     },
 	"config": {
 		"allow-plugins": {
@@ -13,7 +15,8 @@
 		"merge-plugin": {
 			"include": [
 				"extensions/OpenIDConnect/composer.json",
-				"extensions/Widgets/composer.json"
+				"extensions/Widgets/composer.json",
+				"extensions/CheckUser/composer.json"
 			]
 		}
 	}
