@@ -40,7 +40,7 @@ ENV COMPOSER_HOME=/var/www/html/.composer
 RUN composer update --no-dev --prefer-source
 
 COPY ./skins/* /var/www/html/skins/
-RUN chown -R www-data:www-data ./skins ./vendor
+RUN chown -R www-data:www-data ./skins
 
 COPY ./scripts/* /usr/local/bin/
 COPY ./configs/* /var/www/html/
