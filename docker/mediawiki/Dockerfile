@@ -23,7 +23,6 @@ RUN ${GIT_CLONE}/intersection.git
 RUN ${GIT_CLONE}/Lockdown.git
 RUN ${GIT_CLONE}/MsUpload.git
 RUN ${GIT_CLONE}/NewUserNotif.git
-RUN ${GIT_CLONE}/PageForms.git
 RUN ${GIT_CLONE}/Renameuser.git
 RUN ${GIT_CLONE}/Variables.git
 RUN ${GIT_CLONE}/Widgets.git

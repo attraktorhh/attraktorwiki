@@ -1,7 +1,8 @@
 {
 	"require": {
         "mediawiki/semantic-media-wiki": "^6.0",
-		"mediawiki/semantic-result-formats": "^5.1"
+		"mediawiki/semantic-result-formats": "^5.1",
+		"mediawiki/page-forms": "^6.0"
     },
 	"config": {
 		"allow-plugins": {
