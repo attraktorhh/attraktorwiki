@@ -238,7 +238,7 @@ if ( isset( $phpDebug ) && $phpDebug == true ) {
 } else {
 	# Production mode: Hide deprecation notices to prevent PHP 8.2+ warnings
 	# This suppresses PHP 8.2+ dynamic property deprecation warnings
-	# Warnings and errors are still logged and displayed as they indicate important issues
+	# Warnings and errors are still logged (but not displayed) as they indicate important issues
 	error_reporting( E_ALL & ~E_DEPRECATED & ~E_NOTICE );
 	ini_set( 'display_errors', 0 );
 	ini_set( 'log_errors', 1 );

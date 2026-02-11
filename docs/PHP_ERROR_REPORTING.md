@@ -23,7 +23,7 @@ Notice: Undefined property: MediaWiki\Parser\Parser::$mFirstCall in /var/www/htm
 The PHP error reporting configuration in `LocalSettings.php` has been updated to:
 
 1. **Development Mode** (`MW_PHP_DEBUG=true`): Show all errors including deprecations, warnings, and notices
-2. **Production Mode** (`MW_PHP_DEBUG=false`): Hide deprecation notices, warnings, and notices from being displayed to users
+2. **Production Mode** (`MW_PHP_DEBUG=false`): Hide deprecation notices and notices from being displayed to users
 
 ### Configuration Details
 
@@ -39,7 +39,7 @@ if ( isset( $phpDebug ) && $phpDebug == true ) {
 } else {
     # Production mode: Hide deprecation notices to prevent PHP 8.2+ warnings
     # This suppresses PHP 8.2+ dynamic property deprecation warnings
-    # Warnings and errors are still logged and displayed as they indicate important issues
+    # Warnings and errors are still logged (but not displayed) as they indicate important issues
     error_reporting( E_ALL & ~E_DEPRECATED & ~E_NOTICE );
     ini_set( 'display_errors', 0 );
     ini_set( 'log_errors', 1 );
@@ -59,9 +59,9 @@ MW_PHP_DEBUG=false
 This will:
 - Hide deprecation warnings from being displayed to users
 - Hide notices from being displayed to users
-- Keep warnings visible (as they indicate important runtime issues like failed file operations)
+- Keep warnings logged (as they indicate important runtime issues like failed file operations)
 - Still log all errors to the PHP error log
-- Keep fatal errors visible (which is important for debugging critical issues)
+- Prevent error display to end users while keeping logging enabled for debugging
 
 ### For Local Development
 
