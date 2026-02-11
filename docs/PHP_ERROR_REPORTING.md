@@ -37,9 +37,10 @@ if ( isset( $phpDebug ) && $phpDebug == true ) {
     error_reporting( E_ALL );
     ini_set( 'display_errors', 1 );
 } else {
-    # Production mode: Hide deprecation notices and warnings
+    # Production mode: Hide deprecation notices to prevent PHP 8.2+ warnings
     # This suppresses PHP 8.2+ dynamic property deprecation warnings
-    error_reporting( E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_WARNING );
+    # Warnings and errors are still logged and displayed as they indicate important issues
+    error_reporting( E_ALL & ~E_DEPRECATED & ~E_NOTICE );
     ini_set( 'display_errors', 0 );
     ini_set( 'log_errors', 1 );
 }
@@ -57,8 +58,9 @@ MW_PHP_DEBUG=false
 
 This will:
 - Hide deprecation warnings from being displayed to users
-- Hide notices and warnings from being displayed to users
-- Still log errors to the PHP error log
+- Hide notices from being displayed to users
+- Keep warnings visible (as they indicate important runtime issues like failed file operations)
+- Still log all errors to the PHP error log
 - Keep fatal errors visible (which is important for debugging critical issues)
 
 ### For Local Development
@@ -77,7 +79,7 @@ After deploying with `MW_PHP_DEBUG=false`:
 
 1. Visit https://wiki.attraktor.org/Calendar
 2. Verify that no deprecation warnings or notices are displayed
-3. Check PHP error logs if needed: `/var/log/php/error.log` (inside the container)
+3. Check PHP error logs if needed (path depends on PHP configuration, typically accessible via container logs or configured error_log path)
 
 ## Future Considerations
 
