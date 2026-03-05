@@ -179,6 +179,7 @@ wfLoadExtension( 'SpamBlacklist' );
 wfLoadExtension( 'SyntaxHighlight_GeSHi' );
 wfLoadExtension( 'TitleBlacklist' );
 wfLoadExtension( 'WikiEditor' );
+wfLoadExtension( 'VisualEditor' );
 
 # extensions installed via Dockerfile
 wfLoadExtension( 'CheckUser' );
