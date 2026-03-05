@@ -42,8 +42,8 @@ configs:
       $$wgDBname      = "${MYSQL_DATABASE:-attraktorwiki}";
       $$wgDBuser      = "${MYSQL_USER:-attraktorwiki}";
       $$wgDBpassword  = "${SERVICE_PASSWORD_DBUSERPW:?error}";
-      $$phpDebug      = "${MW_PHP_DEBUG:-true}";
-      $$wgReadonly    = "${MW_READONLY:-false}";
+      $$phpDebug      = ${MW_PHP_DEBUG:-true};
+      $$wgReadonly    = ${MW_READONLY:-false};
       $$wgSMTP = [
         'host'      => "${SMTP_HOST:-}",
         'IDHost'    => "${SMTP_IDHOST:-}",
