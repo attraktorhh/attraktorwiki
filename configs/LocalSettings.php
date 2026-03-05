@@ -152,6 +152,8 @@ $wgGroupPermissions['user']['upload'] = true;
 $wgGroupPermissions['bot']['delete'] = true;
 $wgGroupPermissions['bot']['bigdelete'] = true;
 
+$wgAllowExternalImagesFrom = ['https://kuma.soulofnas.de/', 'https://status.attraktor.org/', 'https://healthchecks.io/'];
+
 # Enabled extensions. Most of the extensions are enabled by adding
 # wfLoadExtension( 'ExtensionName' );
 # to LocalSettings.php. Check specific extension documentation for more details.
@@ -177,6 +179,7 @@ wfLoadExtension( 'SpamBlacklist' );
 wfLoadExtension( 'SyntaxHighlight_GeSHi' );
 wfLoadExtension( 'TitleBlacklist' );
 wfLoadExtension( 'WikiEditor' );
+wfLoadExtension( 'VisualEditor' );
 
 # extensions installed via Dockerfile
 wfLoadExtension( 'CheckUser' );
@@ -190,7 +193,7 @@ wfLoadExtension( 'Lockdown' );
 wfLoadExtension( 'MsUpload' );
 $wgMSU_showAutoCat = false; // Files uploaded while editing a category page will be added to that category
 $wgMSU_checkAutoCat = false; // Whether the checkbox for adding a category to a page is checked by default
-$wgFileExtensions = [ 'png', 'gif', 'jpg', 'jpeg', 'doc' ,'xls', 'pdf', 'ppt', 'tiff', 'bmp', 'docx', 'xlsx', 'pptx', 'py' ];
+$wgFileExtensions = [ 'png', 'gif', 'jpg', 'jpeg', 'svg', 'doc' ,'xls', 'pdf', 'ppt', 'tiff', 'bmp', 'docx', 'xlsx', 'pptx', 'py'];
 $wgStrictFileExtensions = false; // If this is turned off, users may override the warning for files not
 wfLoadExtension( 'NewUserNotif' );
 $wgNewUserNotifTargets = array();
