@@ -2,14 +2,24 @@
 
 ARG MEDIAWIKI_IMAGE_VERSION="1.43"
 ARG MEDIAWIKI_RELEASE_BRANCH="REL1_43"
+# Minimum PHP patch level, 8.3.36 fixes CVE-2026-109618 and CVE-2026-109619
+ARG PHP_MIN_VERSION="8.3.36"
 
 FROM mediawiki:${MEDIAWIKI_IMAGE_VERSION}
+
+# Fail the build if the base image ships a PHP version below the required patch level
+ARG PHP_MIN_VERSION
+RUN php -r 'exit(version_compare(PHP_VERSION, getenv("PHP_MIN_VERSION"), ">=") ? 0 : 1);' \
+    || (echo "PHP $(php -r 'echo PHP_VERSION;') is below required ${PHP_MIN_VERSION}" >&2 && exit 1)
 
 ## Install additional packages, might be inefficient but makes debugging easier
 RUN apt update && apt install -y iputils-ping nano zip unzip
 
 # Install Composer to manage SemanticMediaWiki extensions
 COPY --from=composer/composer:2.8-bin /composer /usr/bin/composer
+
+# Wikimedia's CDN rejects git's default User-Agent with 403, set a descriptive one system-wide (git clone and composer)
+RUN git config --system http.userAgent "attraktorwiki-build/1.0 (https://wiki.attraktor.org)"
 
 # Install MediaWiki Extensions from Git repositories which are not on packagist
 USER www-data
