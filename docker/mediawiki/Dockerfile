@@ -18,6 +18,9 @@ RUN apt update && apt install -y iputils-ping nano zip unzip
 # Install Composer to manage SemanticMediaWiki extensions
 COPY --from=composer/composer:2.8-bin /composer /usr/bin/composer
 
+# Wikimedia's CDN rejects git's default User-Agent with 403, set a descriptive one system-wide (git clone and composer)
+RUN git config --system http.userAgent "attraktorwiki-build/1.0 (https://wiki.attraktor.org)"
+
 # Install MediaWiki Extensions from Git repositories which are not on packagist
 USER www-data
 ARG MEDIAWIKI_RELEASE_BRANCH
