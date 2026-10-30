@@ -169,8 +169,11 @@ wfLoadExtension( 'ImageMap' );
 wfLoadExtension( 'InputBox' );
 wfLoadExtension( 'Interwiki' );
 wfLoadExtension( 'Lockdown' );
-$wgSpecialPageLockdown['Export'] = [ 'sysop' ];
 $wgActionLockdown['history'] = [ 'user' ];
+$wgSpecialPageLockdown['Export'] = [ 'sysop' ];
+$wgSpecialPageLockdown['Recentchanges'] = [ 'user' ];
+$wgSpecialPageLockdown['Recentchangeslinked'] = [ 'user' ];
+$wgSpecialPageLockdown['Log'] = [ 'user' ];
 wfLoadExtension( 'Nuke' );
 wfLoadExtension( 'ParserFunctions' );
 wfLoadExtension( 'PdfHandler' );
@@ -189,7 +192,6 @@ $wgCUDMaxAge = 2 * 365 * 24 * 3600;
 $wgAddGroups['sysop'][] = 'checkuser';
 $wgRemoveGroups['sysop'][] = 'checkuser';
 wfLoadExtension( 'intersection' );
-wfLoadExtension( 'Lockdown' );
 wfLoadExtension( 'MsUpload' );
 $wgMSU_showAutoCat = false; // Files uploaded while editing a category page will be added to that category
 $wgMSU_checkAutoCat = false; // Whether the checkbox for adding a category to a page is checked by default
@@ -223,7 +225,10 @@ $srfgFormats[] = 'timeline';
 // 	$wgArticlePath = "$wgScriptPath/$1";
 // }
 
-$wgLocalInterwikis = [strtolower( $wgSitename )]; // ??? 
+$wgLocalInterwikis = [strtolower( $wgSitename )]; // ???
+
+# Trust the reverse proxy's X-Forwarded-For so MediaWiki and CheckUser see real client IPs (MW_TRUSTED_PROXIES)
+$wgCdnServersNoPurge = array_values( array_filter( array_map( 'trim', explode( ',', $trustedProxies ?? '' ) ) ) );
 
 # Official solution https://www.mediawiki.org/wiki/Manual:Short_URL/Docker
 $wgArticlePath = "/$1"; // gives e.g. example.org/wiki/Page_title
@@ -232,14 +237,14 @@ foreach ( $actions as $action ) {
     $wgActionPaths[$action] = "/$action/$1";
 }
 
-# Debug
-if ( isset( $phpDebug ) && $phpDebug == true ) {
+# Debug; compose passes flags as strings, so "false" must be parsed, not loosely compared
+if ( filter_var( $phpDebug ?? false, FILTER_VALIDATE_BOOLEAN ) ) {
 	$wgShowExceptionDetails = true;
 	$wgDevelopmentWarnings = true;
 	error_reporting( E_ALL );
 	ini_set( 'display_errors', 1 );
 }
 
-if ( PHP_SAPI !== 'cli' && isset( $wgReadOnly ) && $wgReadOnly === true ) {
+if ( PHP_SAPI !== 'cli' && filter_var( $readOnly ?? false, FILTER_VALIDATE_BOOLEAN ) ) {
 	$wgReadOnly = 'Dieses Wiki ist im Wartungsmodus, Änderungen sind zur zeit nicht möglich.';
 }
