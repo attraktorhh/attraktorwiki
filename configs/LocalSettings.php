@@ -238,6 +238,13 @@ if ( isset( $phpDebug ) && $phpDebug == true ) {
 	$wgDevelopmentWarnings = true;
 	error_reporting( E_ALL );
 	ini_set( 'display_errors', 1 );
+} else {
+	# Production mode: Hide deprecation notices to prevent PHP 8.2+ warnings
+	# This suppresses PHP 8.2+ dynamic property deprecation warnings
+	# Warnings and errors are still logged (but not displayed) as they indicate important issues
+	error_reporting( E_ALL & ~E_DEPRECATED & ~E_NOTICE );
+	ini_set( 'display_errors', 0 );
+	ini_set( 'log_errors', 1 );
 }
 
 if ( PHP_SAPI !== 'cli' && isset( $wgReadOnly ) && $wgReadOnly === true ) {
