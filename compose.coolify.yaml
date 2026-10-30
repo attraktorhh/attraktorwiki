@@ -38,18 +38,6 @@ services:
     volumes:
       - mediawiki-images:/var/www/html/images
       - /mnt/backups/attraktorwiki:/mnt/backups
-    labels:
-      # Sends anonymous requests for the expensive special pages to the login page instead of rendering them
-      # $${1} is escaped for compose interpolation; Traefik receives ${1}
-      - 'traefik.http.middlewares.wiki-bot-login.redirectregex.regex=^https?://([^/]+)/.*'
-      - 'traefik.http.middlewares.wiki-bot-login.redirectregex.replacement=https://$${1}/Special:UserLogin'
-      - 'traefik.http.routers.wiki-bot-block.rule=(Host(`wiki.attraktor.org`) || Host(`wiki.apps.attraktor.org`) || Host(`www.attraktor.org`)) && (QueryRegexp(`title`, `(?i)^Special:(Recent_?Changes|Log)`) || PathRegexp(`(?i)^/(index\.php/)?Special:(Recent_?Changes|Log)`) || PathPrefix(`/purge/`)) && !HeaderRegexp(`Cookie`, `attraktorwikiUserID=`)'
-      - 'traefik.http.routers.wiki-bot-block.priority=1000'
-      - 'traefik.http.routers.wiki-bot-block.entrypoints=https'
-      - 'traefik.http.routers.wiki-bot-block.tls=true'
-      - 'traefik.http.routers.wiki-bot-block.tls.certresolver=letsencrypt'
-      - 'traefik.http.routers.wiki-bot-block.middlewares=wiki-bot-login'
-      - 'traefik.http.routers.wiki-bot-block.service=noop@internal'
 
 configs:
   mediawiki_secrets:
