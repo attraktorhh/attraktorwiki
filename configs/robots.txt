@@ -1,7 +1,22 @@
 User-agent: *
-Disallow: /index.php?title=Special:UserLogin
-# Disallow queries if you like:
-# Disallow: /index.php
+Disallow: /*title=Special:
+Disallow: /*title=Special%3A
+Disallow: /index.php/Special:
+Disallow: /Special:
+Disallow: /wiki/Special:
+Disallow: /purge/
+Disallow: /api.php
+Disallow: /*action=
+Disallow: /*oldid=
+Disallow: /*diff=
+Allow: /load.php
+
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: CCBot
+User-agent: Google-Extended
+User-agent: Bytespider
+Disallow: /
 
 # If you publish a sitemap:
 # Sitemap: https://wiki.attraktor.org/sitemap.xml

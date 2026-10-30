@@ -130,7 +130,7 @@ $wgDiff3 = "/usr/bin/diff3";
 # The following permissions were set based on your choice in the installer
 $wgGroupPermissions["*"]["createaccount"] = false;
 $wgGroupPermissions["*"]["edit"] = false;
-
+$wgGroupPermissions['*']['purge'] = false;
 # Enabled skins.
 // require_once "$IP/skins/attraktor/Attraktor.php";
 # The following skins were automatically enabled:
