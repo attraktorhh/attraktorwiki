@@ -3,13 +3,14 @@
 # stored in /data/coolify/proxy/dynamic/). Kept out of the compose labels because Coolify
 # attaches every middleware defined there to all of its own routers.
 #
-# Sends anonymous requests for the expensive special pages to the login page before they reach PHP.
+# Rejects anonymous requests for the expensive special pages with 403 before they reach PHP.
+# Traefik has no plain deny middleware; an allowlist that admits only localhost has that effect.
 http:
   middlewares:
-    wiki-bot-login:
-      redirectRegex:
-        regex: '^https?://([^/]+)/.*'
-        replacement: 'https://${1}/Special:UserLogin'
+    wiki-bot-deny:
+      ipAllowList:
+        sourceRange:
+          - 127.0.0.1/32
   routers:
     wiki-bot-block:
       rule: '(Host(`wiki.attraktor.org`) || Host(`wiki.apps.attraktor.org`) || Host(`www.attraktor.org`)) && (QueryRegexp(`title`, `(?i)^Special:(Recent_?Changes|Log)`) || PathRegexp(`(?i)^/(index\.php/)?Special:(Recent_?Changes|Log)`) || PathPrefix(`/purge/`)) && !HeaderRegexp(`Cookie`, `attraktorwikiUserID=`)'
@@ -19,5 +20,5 @@ http:
       tls:
         certResolver: letsencrypt
       middlewares:
-        - wiki-bot-login
+        - wiki-bot-deny
       service: noop@internal
