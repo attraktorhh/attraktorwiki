@@ -1,4 +1,6 @@
 User-agent: *
+Disallow: /*title=Special:
+Disallow: /*title=Special%3A
 Disallow: /index.php/Special:
 Disallow: /Special:
 Disallow: /wiki/Special:
